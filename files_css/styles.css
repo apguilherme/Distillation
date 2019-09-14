@@ -1,0 +1,119 @@
+
+html, body {font-family: Trebuchet MS, Helvetica, sans-serif;
+      color: rgb(44, 44, 44);
+      font-size: 100%;
+      margin: auto;
+      width: 100%;
+      height: 100%;}
+
+p {text-align: left;
+  overflow: auto;
+  padding-right: 2%;
+  padding-left:2%;
+  font-size: 1em;}
+
+h1,h2,h3,h4,h5,h6 {font-family: 'Courier New', Courier, monospace;text-align:left;padding-left: 2%;}
+
+/* table style */
+table {font-size: 75%;
+      margin:auto;
+      background-color:#ffffff;
+      border: 1px solid;
+      border-radius: 0px;
+      text-align: center;
+      box-shadow: 5px 5px 3px rgb(182, 182, 182);margin-top: 1%;}
+table input {width: 60%;}
+
+/* top menu */
+.menu {font-family: Trebuchet MS, Helvetica, sans-serif;
+      background-color: rgb(255, 255, 255);
+      top: 0;left: 0;right: 0;bottom: 0;
+      margin-left: 4%;margin-right: 4%;
+      padding: 1%;
+      display: flex;
+      justify-content: space-between;}
+.menu a {background-color: rgb(255, 255, 255);
+      color: rgb(0, 0, 0);
+      text-decoration: none;
+      font-size: 1.2em;
+      padding: 5%;
+      border: 1px solid rgb(0, 0, 0);
+      margin: 3%;
+      box-shadow: 5px 5px 0px -1px rgba(0,0,0,0.75);
+      transition: 0.3s;}
+.menu a:hover {box-shadow: 3px 3px 0px -1px rgba(0,0,0,0.75);}
+
+
+/* page and buttons */
+.mainpage {margin-left: 4%;margin-right: 4%;text-align: center;}
+
+.buttonwhite, .buttonorange, .buttonnotready {
+      font-weight: bold;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin: 4px 2px;
+      border: 1px solid black;
+      transition: 0.5s;
+      box-shadow: 5px 5px 0px -1px rgba(0,0,0,0.75);
+      color: rgb(0, 0, 0);}
+
+.buttonwhite{background-color: rgb(255, 255, 255);}
+.buttonwhite:hover {background-color: rgb(76, 175, 80);box-shadow: 3px 3px 0px -1px rgba(0,0,0,0.75);}
+
+.buttonorange{background-color: rgb(202, 87, 67);}
+.buttonorange:hover {background-color: rgb(76, 175, 80);color: rgb(0, 0, 0);box-shadow: 3px 3px 0px -1px rgba(0,0,0,0.75);}
+
+.buttonnotready{background-color: rgb(255, 255, 255);}
+.buttonnotready:hover {background-color: rgb(128, 42, 42);color: rgb(0, 0, 0);box-shadow: 3px 3px 0px -1px rgba(0,0,0,0.75);}
+
+/* dropdown buttons to expand topics information */
+.collapse {font-family: Trebuchet MS, Helvetica, sans-serif;
+      background-color: rgb(255, 255, 255);
+      color: rgb(44, 44, 44);
+      cursor: pointer;
+      padding: 1%;margin-top: 1%;
+      width: 100%;
+      border: 1px solid rgb(44, 44, 44);
+      text-align: left;
+      outline: none;
+      font-size: 1.3em;font-weight: bold;
+      transition: 0.5s;}
+.collapse:hover {box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.5);}
+.collapse.active {background-color: rgb(255, 255, 255);box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.5);}
+.collapse:after {content: '\002B';
+      float: right;
+      margin-left: 5px;}
+.collapse, .active:after {content: '\00D7';}
+
+.content {padding: 0 10px;
+      background-color: rgb(245, 245, 245);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;}
+
+/* tabs buttons for the menu in the apps and report results section */
+.tab {overflow: hidden;
+      border: 1px solid rgb(44, 44, 44);
+      background-color: rgb(76, 175, 80);}
+
+.tab button {background-color: rgb(76, 175, 80);
+      color: rgb(0, 0, 0);
+      font-weight: bold;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.5s;}
+
+.tab button:hover {background-color: rgb(44, 44, 44);color: white;}
+.tab button.active {background-color: black;color: white;}
+
+.tabcontent {display: none;
+      background-color: rgb(245, 245, 245);
+      padding: 6px 12px;
+      border-top: none;}
+
+.tab button:after {content: '';}
+
+.report {text-align: left;padding: 0 18px;}
