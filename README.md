@@ -1,4 +1,4 @@
 # distillation
-Distillation calculator for McCabe-Thiele and Ponchon-Savarit methods. https://apguilherme.github.io/distillation
+Chemical Engineering application: Distillation calculator for McCabe-Thiele and Ponchon-Savarit methods. https://apguilherme.github.io/distillation
 
 ![Screenshot](imgpage.png)
