@@ -1,1116 +1,1246 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Distillation</title>
-        <link rel= "stylesheet" type= "text/css" href="./files_css/styles.css">
 
-        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distillation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-        <script>
-            //script for the dropdown of the topics bars on pages (+)
-            function dropdown() {
-                
-                var coll = document.getElementsByClassName("collapse");
-                
-                for (var i = 0; i < coll.length; i++) {
-                    coll[i].addEventListener("click", function() {
-                        this.classList.toggle("active");
-                        var content = this.nextElementSibling;
-                        if (content.style.maxHeight){content.style.maxHeight = null;}
-                        else {content.style.maxHeight = content.scrollHeight + "px";}
-                    });
-                }
+    <style>
+        html, body {
+            color: rgb(44, 44, 44);
+            font-size: 100%;
+            margin: auto;
+            width: 100%;
+            height: 100%;
+        }
+        table input {
+            width: 60%;
+        }
+    </style>
+</head>
 
-            }
+<body>
+    <noscript>
+        <div style="border: 3px solid rgb(0, 0, 0); margin: 10%;padding: 5px;text-align: center;">
+            <span style="color:red;font-weight: bold;">
+                If you are reading this message, JavaScript is not enabled in your browser!<br>
+                You need to enable JavaScript on your browser to view this site.
+            </span>
+        </div>
+    </noscript>
 
-            //script for the dropdown of the menu options on pages that have applications (green menus)
-            function opencontent(event, contentID) {
+    <div style="margin-left: 4%;margin-right: 4%;text-align: center;align-items: center;">
 
-            var i, tabcontent, tablink;
+        <div style="text-align: left;margin: 3%;">
+            <h2>Binary Distillation</h2>
+            <p><em>Source code avaiable <a href="https://github.com/apguilherme/Distillation" target="_blank">here</a>.</em></p>
+        </div>
 
-            tabcontent = document.getElementsByClassName("tabcontent");
-            tabcontent.className += " active";
-            //hide all tabcontent from the menu tablink
-            for (var i = 0; i < tabcontent.length; i++) {tabcontent[i].style.display = "none";}
+        <!--TABS-->
 
-            tablink = document.getElementsByClassName("tablink");
-            //remove all active css from the tablinks
-            for (var i = 0; i < tablink.length; i++) {tablink[i].className = tablink[i].className.replace(" active", "");}
+        <nav style="text-align: left;margin: 3%;">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
 
-            //display the correct content (contentID)
-            document.getElementById(contentID).style.display = "block";
+                <button class="nav-link active" id="nav-example-tab" data-bs-toggle="tab" data-bs-target="#nav-example"
+                    type="button" role="tab" aria-controls="nav-example" aria-selected="true">Run an example</button>
 
-            //add active css to the tablink clicked (event)
-            event.currentTarget.className += " active";
+                <button class="nav-link" id="nav-equilibriumdata-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-equilibriumdata" type="button" role="tab" aria-controls="nav-equilibriumdata"
+                    aria-selected="false">Equilibrium data</button>
 
-            }
+                <button class="nav-link" id="nav-mccabethiele-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-mccabethiele" type="button" role="tab" aria-controls="nav-mccabethiele"
+                    aria-selected="false">McCabe-Thiele</button>
 
-        </script>
-    </head>
+                <button class="nav-link" id="nav-ponchonsavarit-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-ponchonsavarit" type="button" role="tab" aria-controls="nav-ponchonsavarit"
+                    aria-selected="false">Ponchon-Savarit</button>
 
-    <body onload="dropdown();">
-        <noscript>
-            <div style="border: 3px solid rgb(0, 0, 0); margin: 10%;padding: 5px;text-align: center;"><span style="color:red;font-weight: bold;">If you are reading this message, JavaScript is not enabled in your browser!<br>You need to enable JavaScript on your browser to view this site.<br>:(</span></div>
-        </noscript>
-    
-        <div class="mainpage">
+                <button class="nav-link" id="nav-columnprofiles-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-columnprofiles" type="button" role="tab" aria-controls="nav-columnprofiles"
+                    aria-selected="false">Column profiles</button>
 
-            
-            <br><h2>Binary Distillation</h2>
+                <button class="nav-link" id="nav-precision-tab" data-bs-toggle="tab" data-bs-target="#nav-precision"
+                    type="button" role="tab" aria-controls="nav-precision" aria-selected="false">Precision</button>
 
-            <div class="tab">
-                <button class="tablink" onclick="opencontent(event, 'contentInfoEx')">Run an example</button>
-                <button class="tablink" onclick="opencontent(event, 'contentAntoine')">Equilibrium data</button>
-                <button class="tablink" onclick="opencontent(event, 'contentMT')">McCabe-Thiele</button>
-                <button class="tablink" onclick="opencontent(event, 'contentPS')">Ponchon-Savarit</button>
-                <button class="tablink" onclick="opencontent(event, 'contentProfile')">Column profiles</button>
-                <button class="tablink" onclick="opencontent(event, 'contentPrecision')">Precision</button>
-                <button class="tablink" onclick="opencontent(event, 'contentTips')">Tips & Solved</button>
             </div>
+        </nav>
 
+        <!--TAB CONTENT-->
 
-            <div id="contentAntoine" class="tabcontent">
-                <p style="text-align: center;">Enter the data for the Antoine equation: <em> log<sub>10</sub>P = A - B/(T+C)</em></p>
-            <table>
-                <tr><td>
-                    <strong>Pressure [mmHg]:</strong><br>
-                    <input required placeholder="e.g. 760 mmHg" type="number" name="P" id="P"><br><br>
-                    <strong>Number of points:</strong><br>
-                    <input required placeholder="e.g. 100" type="number" name="points" id="points"><br><br>
-                    <strong>Degree of the polynomial:</strong><br>
-                    <input required placeholder="e.g. 3" type="number" name="degreeEq" id="degreeEq"><br><br>
-                </td>
-                <td><strong>Component A:</strong><br>
-                    A:<br>
-                    <input required placeholder="Coefficient A" type="number" name="Aa" id="Aa"><br><br>
-                    B:<br>
-                    <input required placeholder="Coefficient B" type="number" name="Ba" id="Ba"><br><br>
-                    C:<br>
-                    <input required placeholder="Coefficient C" type="number" name="Ca" id="Ca"><br><br>
-                </td>
-                <td><strong>Component B:</strong><br>
-                    A:<br>
-                    <input required placeholder="Coefficient A" type="number" name="Ab" id="Ab"><br><br>
-                    B:<br>
-                    <input required placeholder="Coefficient B" type="number" name="Bb" id="Bb"><br><br>
-                    C:<br>
-                    <input required placeholder="Coefficient C" type="number" name="Cb" id="Cb"><br><br>
-                </td></tr>
-            </table>
-            <div style="display: block;margin:2%;text-align: center;">
-                <input onclick="antoine()" class="buttonorange" type="submit" value="Solve Antoine">
-                <input onclick="hidecontent('plotXYDiagDiv')" class="buttonwhite" type="submit" value="Hide xy-Diagram">
-                <input onclick="hidecontent('plotTXYDiagDiv')" class="buttonwhite" type="submit" value="Hide Txy-Diagram">
-                <input onclick="hidecontent('resultsEqDiv')" class="buttonwhite" type="submit" value="Hide results">
-            </div>
-            <hr>
-            <div class="report">
-                <div id="plotXYDiagDiv"  style="display: inline-block;margin:2%;"></div>
-                <div id="plotTXYDiagDiv"  style="display: inline-block;margin:2%;"></div>
-                <div id="resultsEqDiv"  style="display: inline-block;margin:2%;text-align:left;"></div>
-            </div>
-            </div>
+        <div class="tab-content" id="nav-tabContent">
 
-            
-            <div id="contentMT" class="tabcontent">
-                <p style="text-align:center;">Enter the data for the McCabe-Thiele method:</p>
-            <table>
-                <tr><td>
-                    <strong>Reflux, R:</strong><br>
-                    <input required placeholder="e.g. 3" type="number" name="Rmacthi" id="Rmacthi"><br><br>
-                    <strong>Feed, F:</strong><br>
-                    <input required placeholder="[kmol/h]" type="number" name="Fmacthi" id="Fmacthi"><br><br>
-                    <strong>Feed condition, q:</strong><br>
-                    <input required placeholder="e.g. 1" type="number" name="qmacthi" id="qmacthi"><br><br>
-                </td>
-                <td>
-                    <strong>zF:</strong><br>
-                    <input required placeholder="0 to 1" type="number" name="zfmacthi" id="zfmacthi"><br><br>
-                    <strong>xD:</strong><br>
-                    <input required placeholder="0 to 1" type="number" name="xdmacthi" id="xdmacthi"><br><br>
-                    <strong>xB:</strong><br>
-                    <input required placeholder="0 to 1" type="number" name="xbmacthi" id="xbmacthi"><br><br>
-                </td>
-                <td>
-                    <strong>Murphree efficiency:</strong><br>
-                    <input required placeholder="0 to 1" type="number" name="MurEff" id="MurEff"><br><br>
-                </td></tr>
-            </table>
-            <div style="display: block;margin:2%;text-align: center;">
-                <input onclick="mccabethiele(poly_eq)" class="buttonorange" type="submit" value="Solve McCabe-Thiele">
-                <input onclick="hidecontent('plotMTDiv')" class="buttonwhite" type="submit" value="Hide McCabe-Thiele plot">
-                <input onclick="hidecontent('resultsMTDiv')" class="buttonwhite" type="submit" value="Hide results">
-            </div>
-            <hr>
-            <div class="report">
-                <div id="plotMTDiv"  style="display: inline-block;margin:2%;"></div>
-                <div id="resultsMTDiv"  style="display: inline-block;margin:2%;text-align:left;"></div>
-            </div>
-            </div>
-            
-            
-            <div id="contentPS" class="tabcontent">
-                <p style="text-align:center;">Enter the data for the Ponchon-Savarit method:</p>
-            <table>
-                <tr><td>
-                    <strong>Reflux, R:</strong><br>
-                    <input required placeholder="e.g. 3" type="number" name="Rponsav" id="Rponsav"><br><br>
-                    <strong>Feed, F:</strong><br>
-                    <input required placeholder="[kmol/h]" type="number" name="Fponsav" id="Fponsav"><br><br>
-                    <strong>Feed condition, q:</strong><br>
-                    <input required placeholder="e.g. 1" type="number" name="qmacthi" id="qponsav"><br><br>
-                </td>
-                <td>
-                    <strong>zF:</strong><br>
-                    <input required placeholder="0 to 1" type="number" name="zfponsav" id="zfponsav"><br><br>
-                    <strong>xD:</strong><br>
-                    <input required placeholder="0 to 1" type="number" name="xdponsav" id="xdponsav"><br><br>
-                    <strong>xB:</strong><br>
-                    <input required placeholder="0 to 1" type="number" name="xbponsav" id="xbponsav"><br><br>
-                </td>
-                <td>
-                    <strong>H<sub>vaporization,A</sub></strong><br>
-                    <input required placeholder="[kJ/kmol]" type="number" id="entalpVapA"><br><br>
-                    <strong>H<sub>vaporization,B</sub>:</strong><br>
-                    <input required placeholder="[kJ/kmol]" type="number" id="entalpVapB"><br><br>
-                    <strong>Enthalpy of mixture:</strong><br>
-                    <input required placeholder="[kJ/kmol]" type="number" id="deltaHmist"><br><br>
-                </td>
-                <td>
-                    <strong>Cp<sub>A,liquid</sub>:</strong><br>
-                    <input required placeholder="[kJ/kmol]" type="number" id="cpLA"><br><br>
-                    <strong>Cp<sub>A,vapor</sub>:</strong><br>
-                    <input required placeholder="[kJ/kmol]" type="number" id="cpVA"><br><br>
+            <!--EXAMPLE-->
 
-                    <strong>Cp<sub>B,liquid</sub>:</strong><br>
-                    <input required placeholder="[kJ/kmol]" type="number" id="cpLB"><br><br>
-                    <strong>Cp<sub>B,vapor</sub>:</strong><br>
-                    <input required placeholder="[kJ/kmol]" type="number" id="cpVB"><br><br>
-                </td>
-                <td>
-                    <strong>Degree of the vapor curve:</strong><br>
-                    <input placeholder="e.g. 3" type="number" id="grauHV" required><br><br>
-                    <strong>Degree of the liquid curve:</strong><br>
-                    <input placeholder="e.g. 3" type="number" id="grauHL" required><br><br>
-                    <strong>Reference temperature [°C]:</strong><br>
-                    <input placeholder="[°C]" type="number" id="Tref" disabled><br><br>
-                    <strong>T<sub>saturation,B [°C]:</sub>:</strong><br>
-                    <input placeholder="[°C]" type="number" id="TsatB" disabled><br><br>
-                </td></tr>
-            </table>
-            <div style="display: block;margin:2%;text-align: center;">
-                <input onclick="ponchonsavarit(poly_eq)" class="buttonorange" type="submit" value="Solve Ponchon-Savarit">
-                <input onclick="hidecontent('plotPSDiv')" class="buttonwhite" type="submit" value="Hide Ponchon-Savarit plot">
-                <input onclick="hidecontent('resultsPSDiv')" class="buttonwhite" type="submit" value="Hide results">
-            </div>
-            <hr>
-            <div class="report">
-                <div id="plotPSDiv"  style="display: inline-block;margin:2%;"></div>
-                <div id="resultsPSDiv" style="display: inline-block;margin:2%;"></div>
-            </div>
-            </div>
-            
+            <div class="tab-pane fade show active" id="nav-example" role="tabpanel" aria-labelledby="nav-example-tab">
 
-            <div id="contentProfile" class="tabcontent">
-            <div style="display: block;margin:2%;text-align: center;">
-                <p style="text-align:center;">Click on the buttons bellow to generate or hide the results of column profiles:</p>
-                <input onclick="profilesplot(poly_eq)" class="buttonorange" type="submit" value="Create Profiles">
-                <input onclick="hideprofiles()" class="buttonwhite" type="submit" value="Hide column profiles">
-                <input onclick="hideprofilestables()" class="buttonwhite" type="submit" value="Hide tables">
-            </div>
-            <hr>
-            <div class="report">
-                <div id="profileX"  style="display: inline-block;margin:2%;"></div>
-                <div id="profileY"  style="display: inline-block;margin:2%;"></div>
-                <div id="profileK"  style="display: inline-block;margin:2%;"></div>
-                <div id="profileT" style="display: inline-block;margin:2%;"></div>
-                <div id="profileH"  style="display: inline-block;margin:2%;"></div>
-
-                <div id="tableMTxy"  style="display: inline-block;margin:2%;"></div>
-                <div id="tablePSxy"  style="display: inline-block;margin:2%;"></div>
-                <div id="tablekPS"  style="display: inline-block;margin:2%;"></div>
-                <div id="tablekMT"  style="display: inline-block;margin:2%;"></div>
-                <div id="tablet"  style="display: inline-block;margin:2%;"></div>
-                <div id="tableh"  style="display: inline-block;margin:2%;"></div>
-                <div id="tableantoineDiv" style="display: inline-block;margin:2%;"></div>
-            </div>    
-            </div>
-
-            
-            <div id="contentPrecision" class="tabcontent">
-                <p style="text-align:center;">Set a precision for the calculations (the algorithm uses the bissection method):</p>
-            <table>
-                <tr><td>
-                    <strong>Precision:</strong><br>
-                    <input required value="0.00001" type="number" name="precision" id="precision"><br><br>
-                </td></tr>
-            </table><br>
-            </div>
-            
-
-            <div id="contentTips" class="tabcontent">
-                <p style="text-align:center;">Coming soon: tips for insights and a list of solved examples from literature!</p>
-            </div>
-
-            <div id="contentInfoEx" class="tabcontent">
                 <div style="display: block;margin:2%;text-align: center;">
-                    <p style="text-align:center;">Click on the button below and then click on the others tabs to see the results.</p>
-                    <input onclick="exampleinputs()" class="buttonwhite" type="submit" value="Run example!">
+
+                    <div class="card mb-3">
+                        <div class="row no-gutters">
+
+                            <div class="col-md-4">
+                                <div class="card-body">
+                                    <h5 class="card-title" style="margin-top: 5%;">Welcome</h5>
+                                    <p class="card-text">
+                                        You can run an example and then check the other tabs to see the results.
+                                    </p>
+                                    <button type="button" class="btn btn-success" onclick="exampleinputs()"
+                                        style="margin-top: 5%;">
+                                        Run an example
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-md-8">
+                                <img src="./files_image/distplots.png" class="card-img" alt="Distillation plots">
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
-            </div> 
 
-            <hr>
-
-            <footer><h4>Author: <a href="https://apguilherme.github.io/" target="_blank">Guilherme Almeida</a></h4></footer>
-            
-            <hr>
-            
-            <div style="align-items: center;">
-                <img src="./files_image/distplots.png" alt="plots" style="width: 80%;">
             </div>
-            <hr>
 
+            <!--EQUILIBRIUM-->
+
+            <div class="tab-pane fade" id="nav-equilibriumdata" role="tabpanel"
+                aria-labelledby="nav-equilibriumdata-tab">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <p style="text-align: center;">
+                            Enter the data for the Antoine equation: <em>log<sub>10</sub>P = A - B/(T+C)</em>
+                        </p>
+                        
+                        <table>
+                            <tr>
+                                <td>
+                                    Pressure [mmHg]</strong><br>
+                                    <input required placeholder="e.g. 760 mmHg" type="number" name="P" id="P"><br><br>
+                                    Number of points</strong><br>
+                                    <input required placeholder="e.g. 100" type="number" name="points"
+                                        id="points"><br><br>
+                                    Polynomial degree</strong><br>
+                                    <input required placeholder="e.g. 3" type="number" name="degreeEq"
+                                        id="degreeEq"><br><br>
+                                </td>
+                                <td>Component A</strong><br>
+                                    A<br>
+                                    <input required placeholder="Coefficient A" type="number" name="Aa" id="Aa"><br><br>
+                                    B<br>
+                                    <input required placeholder="Coefficient B" type="number" name="Ba" id="Ba"><br><br>
+                                    C<br>
+                                    <input required placeholder="Coefficient C" type="number" name="Ca" id="Ca"><br><br>
+                                </td>
+                                <td>Component B</strong><br>
+                                    A<br>
+                                    <input required placeholder="Coefficient A" type="number" name="Ab" id="Ab"><br><br>
+                                    B<br>
+                                    <input required placeholder="Coefficient B" type="number" name="Bb" id="Bb"><br><br>
+                                    C<br>
+                                    <input required placeholder="Coefficient C" type="number" name="Cb" id="Cb"><br><br>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="display: block;margin:2%;text-align: center;">
+                            <button type="button" class="btn btn-primary" onclick="antoine()">
+                                Solve Antoine
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="plotXYDiagDiv"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="resultsEqDiv" style="display: inline-block;margin:2%;text-align:left;"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="plotTXYDiagDiv"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--MCCABE-THIELE-->
+
+            <div class="tab-pane fade" id="nav-mccabethiele" role="tabpanel" aria-labelledby="nav-mccabethiele-tab">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <p style="text-align:center;">Enter the data for the McCabe-Thiele method:</p>
+                        <table>
+                            <tr>
+                                <td>
+                                    Reflux, R</strong><br>
+                                    <input required placeholder="e.g. 3" type="number" name="Rmacthi"
+                                        id="Rmacthi"><br><br>
+                                    Feed, F</strong><br>
+                                    <input required placeholder="[kmol/h]" type="number" name="Fmacthi"
+                                        id="Fmacthi"><br><br>
+                                    Feed condition, q</strong><br>
+                                    <input required placeholder="e.g. 1" type="number" name="qmacthi"
+                                        id="qmacthi"><br><br>
+                                </td>
+                                <td>
+                                    zF</strong><br>
+                                    <input required placeholder="0 to 1" type="number" name="zfmacthi"
+                                        id="zfmacthi"><br><br>
+                                    xD</strong><br>
+                                    <input required placeholder="0 to 1" type="number" name="xdmacthi"
+                                        id="xdmacthi"><br><br>
+                                    xB</strong><br>
+                                    <input required placeholder="0 to 1" type="number" name="xbmacthi"
+                                        id="xbmacthi"><br><br>
+                                </td>
+                                <td>
+                                    Murphree efficiency</strong><br>
+                                    <input required placeholder="0 to 1" type="number" name="MurEff"
+                                        id="MurEff"><br><br>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="display: block;margin:2%;text-align: center;">
+                            <button type="button" class="btn btn-primary" onclick="mccabethiele(poly_eq)">
+                                Solve McCabe-Thiele
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="plotMTDiv" style="display: inline-block;margin:2%;"></div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="resultsMTDiv" style="display: inline-block;margin:2%;text-align:left;"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--PONCHON-SAVARIT-->
+
+            <div class="tab-pane fade" id="nav-ponchonsavarit" role="tabpanel" aria-labelledby="nav-ponchonsavarit-tab">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <p style="text-align:center;">Enter the data for the Ponchon-Savarit method:</p>
+                        <table>
+                            <tr>
+                                <td>
+                                    Reflux, R</strong><br>
+                                    <input required placeholder="e.g. 3" type="number" name="Rponsav"
+                                        id="Rponsav"><br><br>
+                                    Feed, F</strong><br>
+                                    <input required placeholder="[kmol/h]" type="number" name="Fponsav"
+                                        id="Fponsav"><br><br>
+                                    Feed condition, q</strong><br>
+                                    <input required placeholder="e.g. 1" type="number" name="qmacthi"
+                                        id="qponsav"><br><br>
+                                </td>
+                                <td>
+                                    zF</strong><br>
+                                    <input required placeholder="0 to 1" type="number" name="zfponsav"
+                                        id="zfponsav"><br><br>
+                                    xD</strong><br>
+                                    <input required placeholder="0 to 1" type="number" name="xdponsav"
+                                        id="xdponsav"><br><br>
+                                    xB</strong><br>
+                                    <input required placeholder="0 to 1" type="number" name="xbponsav"
+                                        id="xbponsav"><br><br>
+                                </td>
+                                <td>
+                                    H<sub>vaporization,A</sub></strong><br>
+                                    <input required placeholder="[kJ/kmol]" type="number" id="entalpVapA"><br><br>
+                                    H<sub>vaporization,B</sub></strong><br>
+                                    <input required placeholder="[kJ/kmol]" type="number" id="entalpVapB"><br><br>
+                                    Enthalpy of mixture</strong><br>
+                                    <input required placeholder="[kJ/kmol]" type="number" id="deltaHmist"><br><br>
+                                </td>
+                                <td>
+                                    Cp<sub>A,liquid</sub></strong><br>
+                                    <input required placeholder="[kJ/kmol]" type="number" id="cpLA"><br><br>
+                                    Cp<sub>A,vapor</sub></strong><br>
+                                    <input required placeholder="[kJ/kmol]" type="number" id="cpVA"><br><br>
+
+                                    Cp<sub>B,liquid</sub></strong><br>
+                                    <input required placeholder="[kJ/kmol]" type="number" id="cpLB"><br><br>
+                                    Cp<sub>B,vapor</sub></strong><br>
+                                    <input required placeholder="[kJ/kmol]" type="number" id="cpVB"><br><br>
+                                </td>
+                                <td>
+                                    Degree of the vapor curve</strong><br>
+                                    <input placeholder="e.g. 3" type="number" id="grauHV" required><br><br>
+                                    Degree of the liquid curve</strong><br>
+                                    <input placeholder="e.g. 3" type="number" id="grauHL" required><br><br>
+                                    Reference temperature [°C]</strong><br>
+                                    <input placeholder="[°C]" type="number" id="Tref" disabled><br><br>
+                                    T<sub>saturation,B [°C]</sub></strong><br>
+                                    <input placeholder="[°C]" type="number" id="TsatB" disabled><br><br>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="display: block;margin:2%;text-align: center;">
+                            <button type="button" class="btn btn-primary" onclick="ponchonsavarit(poly_eq)">
+                                Solve Ponchon-Savarit
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="plotPSDiv" style="display: inline-block;margin:2%;"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="resultsPSDiv" style="display: inline-block;margin:2%;text-align:left;"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--COLUMN-PROFILES-->
+
+            <div class="tab-pane fade" id="nav-columnprofiles" role="tabpanel" aria-labelledby="nav-columnprofiles-tab">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <p style="text-align:center;">
+                            Click on the buttons bellow to generate the column profiles:
+                        </p>
+                        <button type="button" class="btn btn-primary" onclick="profilesplot(poly_eq)">
+                            Create column profiles
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="profileX" style="display: inline-block;margin:2%;"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="profileK" style="display: inline-block;margin:2%;"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="profileY" style="display: inline-block;margin:2%;"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="profileT" style="display: inline-block;margin:2%;"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="profileH" style="display: inline-block;margin:2%;"></div>
+                    </div>
+                </div>
+
+
+                <div class="">
+                    <div id="tableMTxy" style="display: inline-block;margin:2%;"></div>
+                    <div id="tablePSxy" style="display: inline-block;margin:2%;"></div>
+                    <div id="tablekPS" style="display: inline-block;margin:2%;"></div>
+                    <div id="tablekMT" style="display: inline-block;margin:2%;"></div>
+                    <div id="tablet" style="display: inline-block;margin:2%;"></div>
+                    <div id="tableh" style="display: inline-block;margin:2%;"></div>
+                    <div id="tableantoineDiv" style="display: inline-block;margin:2%;"></div>
+                </div>
+
+            </div>
+
+            <!--PRECISION-->
+
+            <div class="tab-pane fade" id="nav-precision" role="tabpanel" aria-labelledby="nav-precision-tab">
+
+                <p style="text-align:center;">
+                    Set a precision for the calculations (the algorithm uses the bissection method):
+                </p>
+                <table>
+                    <tr>
+                        <td>
+                            Precision<br>
+                            <input required value="0.00001" type="number" name="precision" id="precision"><br><br>
+                        </td>
+                    </tr>
+                </table><br>
+
+            </div>
 
         </div>
 
-        <script>
-            
-            function exampleinputs() {
-                //antoine
-                document.getElementById("P").value = 760;
-                document.getElementById("Aa").value = 7.23155;
-                document.getElementById("Ba").value = 1277.03;
-                document.getElementById("Ca").value = 237.22;
-                document.getElementById("Ab").value = 7.94915;
-                document.getElementById("Bb").value = 1657.46;
-                document.getElementById("Cb").value = 227.02;
-                document.getElementById("points").value = 100;
-                document.getElementById("degreeEq").value = 3;
-                //run
-                antoine();
+        <hr>
+        <footer style="margin-bottom:10%"></footer>
+
+    </div>
+
+    <script>
+
+        function exampleinputs() {
+            //antoine
+            document.getElementById("P").value = 760;
+            document.getElementById("Aa").value = 7.23155;
+            document.getElementById("Ba").value = 1277.03;
+            document.getElementById("Ca").value = 237.22;
+            document.getElementById("Ab").value = 7.94915;
+            document.getElementById("Bb").value = 1657.46;
+            document.getElementById("Cb").value = 227.02;
+            document.getElementById("points").value = 100;
+            document.getElementById("degreeEq").value = 3;
+            //run
+            antoine();
+        }
+
+
+        //function to antoine calculation
+        function antoine() {
+
+            var P = parseFloat(document.getElementById("P").value);
+            var Aa = parseFloat(document.getElementById("Aa").value);
+            var Ba = parseFloat(document.getElementById("Ba").value);
+            var Ca = parseFloat(document.getElementById("Ca").value);
+            var Ab = parseFloat(document.getElementById("Ab").value);
+            var Bb = parseFloat(document.getElementById("Bb").value);
+            var Cb = parseFloat(document.getElementById("Cb").value);
+            var points = parseFloat(document.getElementById("points").value);
+            order = parseFloat(document.getElementById("degreeEq").value);
+            //antoine equation, solved to obtain the temperature and to define the extremes of the range of temp
+            function antoine_temper(A, B, C, P) {
+                return (B / (A - (Math.log(P) / Math.log(10))) - C);
             }
-            
-
-            //function to antoine calculation
-            function antoine() {
-                
-                var P = parseFloat(document.getElementById("P").value);
-                var Aa = parseFloat(document.getElementById("Aa").value);
-                var Ba = parseFloat(document.getElementById("Ba").value);
-                var Ca = parseFloat(document.getElementById("Ca").value);
-                var Ab = parseFloat(document.getElementById("Ab").value);
-                var Bb = parseFloat(document.getElementById("Bb").value);
-                var Cb = parseFloat(document.getElementById("Cb").value);
-                var points = parseFloat(document.getElementById("points").value);
-                order = parseFloat(document.getElementById("degreeEq").value);
-                //antoine equation, solved to obtain the temperature and to define the extremes of the range of temp
-                function antoine_temper(A, B, C, P) {
-                    return (B / (A - (Math.log(P) / Math.log(10))) - C);
-                }
-                var tem_A = antoine_temper(Aa, Ba, Ca, P);
-                var tem_B = antoine_temper(Ab, Bb, Cb, P);
-                //loop to obtain temperatures between the range, number of points variable
-                temp_range = [];
-                temp_range.push(tem_A);
-                var T = 0;
-                for (var i=1;i<points;i++){
-                    T = tem_A + i * (tem_B-tem_A) / (points-1);
-                    temp_range.push(T);}
-                //loop to obtain parcial pressures within the range and respectives equilibrium compositions
-                var vet_pA = [];var vet_pB = [];var pA = 0;var pB = 0;
-                for (var i=0;i<temp_range.length;i++){
-                    pA = Math.pow(10, (Aa-Ba/(temp_range[i]+Ca)));
-                    pB = Math.pow(10, (Ab-Bb/(temp_range[i]+Cb)));
-                    vet_pA.push(pA);
-                    vet_pB.push(pB);}
-                vet_xeq = [];vet_yeq = [];var xA = 0;var yA = 0;
-                for (var i=0;i<temp_range.length;i++){
-                    xA = (P-vet_pB[i]) / (vet_pA[i]-vet_pB[i]);
-                    yA = (vet_pA[i]*xA) / P;
-                    vet_xeq.push(xA);
-                    vet_yeq.push(yA);}
-                //call functions
-                poly_eq = [];
-                poly_eq = fit_gauss(vet_xeq,vet_yeq,order,'',poly_eq);
-                // Y AJUSTADO pelo poly e R2 ???
-                //var yajuste_eq = poly_eq(vet_xeq);
-                //colocar no plot yajuste_eq !!!
-                plot(vet_xeq,vet_yeq,'Generated data','markers',[0,1],[0,1],'Reference line','scatter','','','','','','','','','','','','','','','','','','','','','plotXYDiagDiv','xy-Diagram','xA','yA');
-                plot(vet_xeq,temp_range,'Tx','markers',vet_yeq,temp_range,'Ty','markers','','','','','','','','','','','','','','','','','','','','','plotTXYDiagDiv','Txy-Diagram','xA,yA','T[°C]');
-                var poleq = [];
-                for (var j=0;j<=poly_eq.length;j++){
-                    if (poly_eq[j]>0){poleq = poleq + ' + ' + poly_eq[j] + ' * <strong>x<sup>' + (poly_eq.length-j-1) + '</sup></strong>';}
-                    else if (poly_eq[j]<0){poleq = poleq+ ' ' + poly_eq[j] + ' * <strong>x<sup>' + (poly_eq.length-j-1) + '</sup></strong>';}
-                }
-                document.getElementById('resultsEqDiv').innerHTML = '<strong>Results (Antoine): </strong><br><br>' + ' - Equilibrium curve adjusted: <br>' +poleq;
+            var tem_A = antoine_temper(Aa, Ba, Ca, P);
+            var tem_B = antoine_temper(Ab, Bb, Cb, P);
+            //loop to obtain temperatures between the range, number of points variable
+            temp_range = [];
+            temp_range.push(tem_A);
+            var T = 0;
+            for (var i = 1; i < points; i++) {
+                T = tem_A + i * (tem_B - tem_A) / (points - 1);
+                temp_range.push(T);
             }
+            //loop to obtain parcial pressures within the range and respectives equilibrium compositions
+            var vet_pA = []; var vet_pB = []; var pA = 0; var pB = 0;
+            for (var i = 0; i < temp_range.length; i++) {
+                pA = Math.pow(10, (Aa - Ba / (temp_range[i] + Ca)));
+                pB = Math.pow(10, (Ab - Bb / (temp_range[i] + Cb)));
+                vet_pA.push(pA);
+                vet_pB.push(pB);
+            }
+            vet_xeq = []; vet_yeq = []; var xA = 0; var yA = 0;
+            for (var i = 0; i < temp_range.length; i++) {
+                xA = (P - vet_pB[i]) / (vet_pA[i] - vet_pB[i]);
+                yA = (vet_pA[i] * xA) / P;
+                vet_xeq.push(xA);
+                vet_yeq.push(yA);
+            }
+            //call functions
+            poly_eq = [];
+            poly_eq = fit_gauss(vet_xeq, vet_yeq, order, '', poly_eq);
+            // Y AJUSTADO pelo poly e R2 ???
+            //var yajuste_eq = poly_eq(vet_xeq);
+            //colocar no plot yajuste_eq !!!
+            plot(vet_xeq, vet_yeq, 'Generated data', 'markers', [0, 1], [0, 1], 'Reference line', 'scatter', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'plotXYDiagDiv', 'xy-Diagram', 'xA', 'yA');
+            plot(vet_xeq, temp_range, 'Tx', 'markers', vet_yeq, temp_range, 'Ty', 'markers', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'plotTXYDiagDiv', 'Txy-Diagram', 'xA,yA', 'T[°C]');
+            var poleq = [];
+            for (var j = 0; j <= poly_eq.length; j++) {
+                if (poly_eq[j] > 0) { poleq = poleq + ' + ' + poly_eq[j] + ' * <strong>x<sup>' + (poly_eq.length - j - 1) + '</sup></strong>'; }
+                else if (poly_eq[j] < 0) { poleq = poleq + ' ' + poly_eq[j] + ' * <strong>x<sup>' + (poly_eq.length - j - 1) + '</sup></strong>'; }
+            }
+            document.getElementById('resultsEqDiv').innerHTML = '<strong>Results (Antoine): </strong><br><br>' + ' Equilibrium curve adjusted: <br><br>' + poleq;
+        }
 
 
-            //function to clean div that receives tables and plots
-            function hidecontent(id){document.getElementById(id).innerHTML = "";}
+        //function to clean div that receives tables and plots
+        function hidecontent(id) { document.getElementById(id).innerHTML = ""; }
 
 
-            //function to create table for the div
-            //not used !!!
-            function createtable(vet_1,vet_2,id,title1,title2){
-                hidecontent(id);
-                var id = document.getElementById(id);
-                var table = document.createElement("table");
-                var tableBody = document.createElement('tbody');
-                table.border = '1'
-                table.style.borderCollapse = 'collapse';
+        //function to create table for the div
+        //not used !!!
+        function createtable(vet_1, vet_2, id, title1, title2) {
+            hidecontent(id);
+            var id = document.getElementById(id);
+            var table = document.createElement("table");
+            var tableBody = document.createElement('tbody');
+            table.border = '1'
+            table.style.borderCollapse = 'collapse';
+            var row = document.createElement("tr");
+            tableBody.appendChild(row);
+            var head = document.createElement('th')
+            head.appendChild(document.createTextNode(title1));
+            row.appendChild(head);
+            var head = document.createElement('th')
+            head.appendChild(document.createTextNode(title2));
+            row.appendChild(head);
+            for (var r = 0; r < vet_1.length; r++) {
                 var row = document.createElement("tr");
-                tableBody.appendChild(row);
-                var head = document.createElement('th')
-                head.appendChild(document.createTextNode(title1));
-                row.appendChild(head);
-                var head = document.createElement('th')
-                head.appendChild(document.createTextNode(title2));
-                row.appendChild(head);
-                for (var r=0;r<vet_1.length;r++){
-                    var row = document.createElement("tr");
-                        for (var c=0;c<2;c++){
-                            var cell = document.createElement("td");
-                            if (c==0){cell.appendChild(document.createTextNode(vet_1[r]));}
-                            else if(c==1){cell.appendChild(document.createTextNode(vet_2[r]));}
-                            row.appendChild(cell);
-                        }tableBody.appendChild(row);}table.appendChild(tableBody);id.appendChild(table);
-            }
+                for (var c = 0; c < 2; c++) {
+                    var cell = document.createElement("td");
+                    if (c == 0) { cell.appendChild(document.createTextNode(vet_1[r])); }
+                    else if (c == 1) { cell.appendChild(document.createTextNode(vet_2[r])); }
+                    row.appendChild(cell);
+                } tableBody.appendChild(row);
+            } table.appendChild(tableBody); id.appendChild(table);
+        }
 
 
-            //create plot in the div ID, max 7 set of 2 vectors
-            function plot(vetx1,vety1,name1,mode1,vetx2,vety2,name2,mode2,vetx3,vety3,name3,mode3,vetx4,vety4,name4,mode4,vetx5,vety5,name5,mode5,vetx6,vety6,name6,mode6,vetx7,vety7,name7,mode7,id,titleplot,titlex,titley){
-                hidecontent(id);id = document.getElementById(id);
-                var layout = {autosize:false,title: titleplot, xaxis: {title: titlex}, yaxis: {title: titley}};
-                data = [{x:vetx1,y:vety1,mode: mode1,name: name1},{x:vetx2,y:vety2,mode: mode2,name: name2,marker: {color: 'rgb(255, 100, 12)'}},{x:vetx3,y:vety3,mode: mode3,name: name3},{x:vetx4,y:vety4,mode: mode4,name: name4},{x:vetx5,y:vety5,mode: mode5,name: name5},{x:vetx6,y:vety6,mode: mode6,name: name6},{x:vetx7,y:vety7,mode: mode7,name: name7,marker: {color: 'rgb(255, 100, 12)'},showlegend: false}];
-                Plotly.newPlot(id,data,layout);
-            }
+        //create plot in the div ID, max 7 set of 2 vectors
+        function plot(vetx1, vety1, name1, mode1, vetx2, vety2, name2, mode2, vetx3, vety3, name3, mode3, vetx4, vety4, name4, mode4, vetx5, vety5, name5, mode5, vetx6, vety6, name6, mode6, vetx7, vety7, name7, mode7, id, titleplot, titlex, titley) {
+            hidecontent(id); id = document.getElementById(id);
+            var layout = { autosize: false, title: titleplot, xaxis: { title: titlex }, yaxis: { title: titley } };
+            data = [{ x: vetx1, y: vety1, mode: mode1, name: name1 }, { x: vetx2, y: vety2, mode: mode2, name: name2, marker: { color: 'rgb(255, 100, 12)' } }, { x: vetx3, y: vety3, mode: mode3, name: name3 }, { x: vetx4, y: vety4, mode: mode4, name: name4 }, { x: vetx5, y: vety5, mode: mode5, name: name5 }, { x: vetx6, y: vety6, mode: mode6, name: name6 }, { x: vetx7, y: vety7, mode: mode7, name: name7, marker: { color: 'rgb(255, 100, 12)' }, showlegend: false }];
+            Plotly.newPlot(id, data, layout);
+        }
 
 
-            //function that fits a plynomial with 'order' to the 2 vectors using Gauss, return vector of coefs solution_coefs
-            function fit_gauss(data_x,data_y,order,id,solution_coefs){
-                var matrix_x = [];var matrix_y = [];var temporary = [];var soma = 0;var x = 0;var multiplicacao = 0;
-                //matrix_x with the sum of data_x to the power L+C
-                for (var L=0;L<=order;L++){
-                    var temporary = [];
-                    for (var C=0;C<=order;C++){
-                        var soma = 0;
-                        for (var i=0;i<data_x.length;i++){
-                            x = Math.pow(data_x[i], (L+C));
-                            soma = soma + x;
-                        }temporary.push(soma);}
-                matrix_x.push(temporary);}
-                //matrix_y the sum of the products of the multiplication between data_y and data_x to the power p
-                for (var p=0;p<=order;p++){
+        //function that fits a plynomial with 'order' to the 2 vectors using Gauss, return vector of coefs solution_coefs
+        function fit_gauss(data_x, data_y, order, id, solution_coefs) {
+            var matrix_x = []; var matrix_y = []; var temporary = []; var soma = 0; var x = 0; var multiplicacao = 0;
+            //matrix_x with the sum of data_x to the power L+C
+            for (var L = 0; L <= order; L++) {
+                var temporary = [];
+                for (var C = 0; C <= order; C++) {
                     var soma = 0;
-                    for (var i=0;i<data_x.length;i++){
-                        multiplicacao = (data_y[i]) * (Math.pow(data_x[i], p));
-                        soma = soma + multiplicacao;}
-                matrix_y.push([soma]);}
-                //gauss e back substitution
-                for (var i=0;i<=order;i++){matrix_x[i].push(matrix_y[i][0]);}
-                for (var i=0;i<=order;i++){
-                    for (var k=i+1;k<=order;k++){pivot = matrix_x[k][i] / matrix_x[i][i];
-                        for (var j=0;j<=order+1;j++){matrix_x[k][j] = matrix_x[k][j] - pivot * matrix_x[i][j];}
-                    }
+                    for (var i = 0; i < data_x.length; i++) {
+                        x = Math.pow(data_x[i], (L + C));
+                        soma = soma + x;
+                    } temporary.push(soma);
                 }
-                for (var i=order;i>=0;i--){
-                    matrix_y[i] = matrix_x[i][order+1];
-                    for (var j=0;j<=order;j++){
-                        if (j!=i){ matrix_y[i] = matrix_y[i] - matrix_x[i][j] * matrix_y[j];}
-                    }matrix_y[i] = matrix_y[i] / matrix_x[i][i];
-                }var solution = [];solution_coefs = [];
-                for (var j=order;j>=0;j--){
-                    solution_coefs.push(matrix_y[j]);
-                    if (id!=''){
-                        if (matrix_y[j]>0){solution = solution + ' + ' + matrix_y[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>';}
-                        else if (matrix_y[j]<0){solution = solution+ ' ' + matrix_y[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>';}
-                        document.getElementById(id).innerHTML = '<strong>Results: </strong><br><br>' + solution + '<br><br>';
-                    }
-                    
-                }return solution_coefs;
+                matrix_x.push(temporary);
             }
-
-
-
-
-            
-            function exampleinputs() {
-                document.getElementById("precision").value = 0.00001;
-                //antoine 
-                document.getElementById("P").value = 760;
-                document.getElementById("Aa").value = 7.23155;
-                document.getElementById("Ba").value = 1277.03;
-                document.getElementById("Ca").value = 237.22;
-                document.getElementById("Ab").value = 7.94915;
-                document.getElementById("Bb").value = 1657.46;
-                document.getElementById("Cb").value = 227.02;
-                document.getElementById("points").value = 100;
-                document.getElementById("degreeEq").value = 3;
-                //MT
-                document.getElementById("Rmacthi").value = 2;
-                document.getElementById("Fmacthi").value = 100.8;
-                document.getElementById("qmacthi").value = 1;
-                document.getElementById("zfmacthi").value = 0.42;
-                document.getElementById("xdmacthi").value = 0.95;
-                document.getElementById("xbmacthi").value = 0.04;
-                document.getElementById("MurEff").value = 1;
-                //PS
-                document.getElementById("zfponsav").value = 0.42;
-                document.getElementById("xdponsav").value = 0.95;
-                document.getElementById("xbponsav").value = 0.04;
-                document.getElementById("Rponsav").value = 2;
-                document.getElementById("qponsav").value = 1;
-                document.getElementById("Fponsav").value = 100.8;
-                document.getElementById("entalpVapA").value = 28762;
-                document.getElementById("entalpVapB").value = 42124;
-                document.getElementById("cpLA").value = 139.3;
-                document.getElementById("cpLB").value = 77.6;
-                document.getElementById("cpVA").value = 82.3;
-                document.getElementById("cpVB").value = 34.1;
-                document.getElementById("deltaHmist").value = 0;
-                document.getElementById("grauHV").value = 3;
-                document.getElementById("grauHL").value = 3;
-                //run
-                antoine();
-                mccabethiele(poly_eq);
-                ponchonsavarit(poly_eq);
-                profilesplot();
+            //matrix_y the sum of the products of the multiplication between data_y and data_x to the power p
+            for (var p = 0; p <= order; p++) {
+                var soma = 0;
+                for (var i = 0; i < data_x.length; i++) {
+                    multiplicacao = (data_y[i]) * (Math.pow(data_x[i], p));
+                    soma = soma + multiplicacao;
+                }
+                matrix_y.push([soma]);
             }
-
-
-            //function to antoine calculation
-            function antoine() {
-                var P = parseFloat(document.getElementById("P").value);
-                var Aa = parseFloat(document.getElementById("Aa").value);
-                var Ba = parseFloat(document.getElementById("Ba").value);
-                var Ca = parseFloat(document.getElementById("Ca").value);
-                var Ab = parseFloat(document.getElementById("Ab").value);
-                var Bb = parseFloat(document.getElementById("Bb").value);
-                var Cb = parseFloat(document.getElementById("Cb").value);
-                var points = parseFloat(document.getElementById("points").value);
-                order = parseFloat(document.getElementById("degreeEq").value);
-                precision = parseFloat(document.getElementById("precision").value);
-                //antoine equation, solved to obtain the temperature and to define the extremes of the range of temp
-                function antoine_temper(A, B, C, P) {
-                    return (B / (A - (Math.log(P) / Math.log(10))) - C);
+            //gauss e back substitution
+            for (var i = 0; i <= order; i++) { matrix_x[i].push(matrix_y[i][0]); }
+            for (var i = 0; i <= order; i++) {
+                for (var k = i + 1; k <= order; k++) {
+                    pivot = matrix_x[k][i] / matrix_x[i][i];
+                    for (var j = 0; j <= order + 1; j++) { matrix_x[k][j] = matrix_x[k][j] - pivot * matrix_x[i][j]; }
                 }
-                var tem_A = antoine_temper(Aa, Ba, Ca, P);
-                var tem_B = antoine_temper(Ab, Bb, Cb, P);
-                //loop to obtain temperatures between the range, number of points variable
-                temp_range = [];
-                temp_range.push(tem_A);
-                var T = 0;
-                for (var i=1;i<points;i++) {
-                    T = tem_A + i * (tem_B-tem_A) / (points-1);
-                    temp_range.push(T);
-                }
-                //values to PS method
-                Tref = temp_range[0];
-                TsatB = temp_range[temp_range.length-1];
-                document.getElementById("Tref").placeholder = Tref;
-                document.getElementById("TsatB").placeholder = TsatB;
-                //loop to obtain parcial pressures within the range and respectives equilibrium compositions
-                var vet_pA = [];var vet_pB = [];var pA = 0;var pB = 0;
-                for (var i=0;i<temp_range.length;i++){
-                    pA = Math.pow(10, (Aa-Ba/(temp_range[i]+Ca)));
-                    pB = Math.pow(10, (Ab-Bb/(temp_range[i]+Cb)));
-                    vet_pA.push(pA);
-                    vet_pB.push(pB);}
-                vet_xeq = [];vet_yeq = [];var xA = 0;var yA = 0;
-                for (var i=0;i<temp_range.length;i++){
-                    xA = (P-vet_pB[i]) / (vet_pA[i]-vet_pB[i]);
-                    yA = (vet_pA[i]*xA) / P;
-                    vet_xeq.push(xA);
-                    vet_yeq.push(yA);}
-                //call functions
-                poly_eq = [];
-                poly_eq = fit_gauss(vet_xeq,vet_yeq,order,'',poly_eq);
-                // Y AJUSTADO pelo poly e R2 ???
-                //var yajuste_eq = poly_eq(vet_xeq);
-                //colocar no plot yajuste_eq !!!
-                plot(vet_xeq,vet_yeq,'Generated data','markers',[0,1],[0,1],'Reference line','scatter','','','','','','','','','','','','','','','','','','','','','plotXYDiagDiv','xy-Diagram','xA','yA');
-                plot(vet_xeq,temp_range,'Tx','markers',vet_yeq,temp_range,'Ty','markers','','','','','','','','','','','','','','','','','','','','','plotTXYDiagDiv','Txy-Diagram','xA,yA','T[°C]');
-                var poleq = [];
-                for (var j=0;j<=poly_eq.length;j++){
-                    if (poly_eq[j]>0){poleq = poleq + ' + ' + poly_eq[j] + ' * <strong>x<sup>' + (poly_eq.length-j-1) + '</sup></strong>';}
-                    else if (poly_eq[j]<0){poleq = poleq+ ' ' + poly_eq[j] + ' * <strong>x<sup>' + (poly_eq.length-j-1) + '</sup></strong>';}
-                }
-                document.getElementById('resultsEqDiv').innerHTML = '<strong>Results (Antoine): </strong><br><br>' + ' - Equilibrium curve adjusted: <br>' +poleq;
             }
+            for (var i = order; i >= 0; i--) {
+                matrix_y[i] = matrix_x[i][order + 1];
+                for (var j = 0; j <= order; j++) {
+                    if (j != i) { matrix_y[i] = matrix_y[i] - matrix_x[i][j] * matrix_y[j]; }
+                } matrix_y[i] = matrix_y[i] / matrix_x[i][i];
+            } var solution = []; solution_coefs = [];
+            for (var j = order; j >= 0; j--) {
+                solution_coefs.push(matrix_y[j]);
+                if (id != '') {
+                    if (matrix_y[j] > 0) { solution = solution + ' + ' + matrix_y[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>'; }
+                    else if (matrix_y[j] < 0) { solution = solution + ' ' + matrix_y[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>'; }
+                    document.getElementById(id).innerHTML = '<strong>Results: </strong><br><br>' + solution + '<br><br>';
+                }
+
+            } return solution_coefs;
+        }
 
 
-            //mccabe-thiele calculation function
-            function mccabethiele(poly_eq){
-                
-                var Rmacthi = parseFloat(document.getElementById("Rmacthi").value);
-                var Fmacthi = parseFloat(document.getElementById("Fmacthi").value);
-                var qmacthi = parseFloat(document.getElementById("qmacthi").value);
-                var zfmacthi = parseFloat(document.getElementById("zfmacthi").value);
-                var xdmacthi = parseFloat(document.getElementById("xdmacthi").value);
-                var xbmacthi = parseFloat(document.getElementById("xbmacthi").value);
-                var MurEffMT = parseFloat(document.getElementById("MurEff").value);
 
-                if (qmacthi==1){qmacthi=qmacthi+0.0001;}
-                //mass balance
-                var B = Fmacthi * (zfmacthi-xdmacthi)/(xbmacthi-xdmacthi);
-                var D = Fmacthi * (1-(zfmacthi-xdmacthi)/(xbmacthi-xdmacthi));
-                //line-q coefficients, feed
-                var coef_lin_q_ax = qmacthi / (qmacthi-1);
-                var coef_lin_q_b = -zfmacthi / (qmacthi-1);
-                //rectification line coefficients
-                var coef_retif_ax = Rmacthi / (Rmacthi+1);
-                var coef_retif_b = xdmacthi / (Rmacthi+1);
-                //rectif - feed = 0
-                var x_ra = coef_retif_ax - coef_lin_q_ax;
-                var cte_ra = coef_retif_b - coef_lin_q_b;
-                //interception rectif = feed
-                var x_intercep_ra = - cte_ra / x_ra;
-                var y_intercep_ra = coef_retif_ax * x_intercep_ra + coef_retif_b;
-                //equilibrium coefs already generated with antoine()
-                //equilibrium - feed = 0
-                var vet_coef = [];
-                for (var i=0;i<=poly_eq.length-1;i++){
-                    if (i==(poly_eq.length-1)){vet_coef.push(poly_eq[poly_eq.length-1]-coef_lin_q_b);}
-                    else if (i==(poly_eq.length-2)){vet_coef.push(poly_eq[poly_eq.length-2]-coef_lin_q_ax);}
-                    else {vet_coef.push(poly_eq[i]);}
-                }
-                var x_raizreal_macthi = 0;
-                var x_raizreal_macthi = root_bissection(vet_coef,order,0,1,precision,x_raizreal_macthi);
-                var y_eq_macthi = 0;
-                var y_eq_macthi = put_on_poly(x_raizreal_macthi,y_eq_macthi,poly_eq);
-                // lines feed, retific and stripping
-                var x_lin_q = [zfmacthi,x_intercep_ra];
-                var y_lin_q = [zfmacthi,y_intercep_ra];
-                var x_lin_retif = [xdmacthi,x_intercep_ra];
-                var y_lin_retif = [xdmacthi,y_intercep_ra];
-                var x_lin_esgot = [xbmacthi,x_intercep_ra];
-                var y_lin_esgot = [xbmacthi,y_intercep_ra];
-                var coefs_esgot = [];
-                var poly_esgot = fit_gauss(x_lin_esgot,y_lin_esgot,1,'resultsMTDiv',poly_esgot);
-                var coef_esgot_ax = poly_esgot[0];
-                var coef_esgot_b = poly_esgot[1];
-                var Rmin = (xdmacthi-y_eq_macthi) / (y_eq_macthi-x_raizreal_macthi);
-                if (Rmacthi<Rmin){alert('Atenção! O valor de R deve ser maior que Rmin = '+Rmin);return;}
-                //criteria to change from retif to stripping
-                var x_critico = x_intercep_ra;
-                if (xbmacthi>xdmacthi){alert('Atenção! O valor de xB deve ser menor que xD = '+xdmacthi);return;}
-                if (xbmacthi>x_critico){alert('Atenção! O valor de xB deve ser menor que '+x_critico);return;}
-                //inicial dots for the stages, yshow and xshow just to show y and x variation
-                var x_retas= [];
-                var y_retas= [];
-                xshowMT_retas = [];
-                yshowMT_retas = [];
-                y_retas.push(xdmacthi);
-                y_retas.push(xdmacthi);
-                y_retas.push(xdmacthi);
-                x_retas.push(xdmacthi);
-                xshowMT_retas.push(xdmacthi);
-                var x = x_retas[x_retas.length-1];
-                var y = y_retas[1];
-                var iteracao_retif = 0;
-                var iteracao_esgot = 0;
-                var data_x = [];
-                var data_y = [];
-                //for the vapor profile: before add yD=xD, need to calculate the composition of vapor that would leave stage 1 (condenser)
-                //just pass xD to the poly_eq
-                var y_superior_a_xd_MT = 0;
-                var y_superior_a_xd_MT = put_on_poly(xdmacthi,y_superior_a_xd_MT,poly_eq);
-                data_y.push(y_superior_a_xd_MT);
-                data_y.push(xdmacthi);
-                data_x.push(xdmacthi);
-                yshowMT_retas.push(y_superior_a_xd_MT);yshowMT_retas.push(xdmacthi);
-                for (var i=0;i<=200;i++){
-                    var vetcoef_retas = [];
-                    //do poly_eq - y = 0 and add raiz x to x_retas
-                    for (var z=0;z<=poly_eq.length-1;z++){
-                        if (z==(poly_eq.length-1)){vetcoef_retas.push(poly_eq[poly_eq.length-1]-y);}
-                        else {vetcoef_retas.push(poly_eq[z]);}
-                    }
-                    var raizXreal = [];
-                    var raizXreal = root_bissection(vetcoef_retas,order,0,1,precision,raizXreal);
-                    var xreal = 0;
-                    xreal = MurEffMT * (raizXreal-x_retas[x_retas.length-1]) + x_retas[x_retas.length-1]; //liquid murphree relative eff
-                    x_retas.push(xreal);
-                    x_retas.push(xreal);
-                    x_retas.push(xreal);
-                    x_retas.push(xreal);
-                    xshowMT_retas.push(xreal);
-                    data_x.push(xreal);
-                    x = x_retas[x_retas.length-1];
-                    if (x>x_critico){ //calc Y na reta de retif e add ao y_retas
-                        y = coef_retif_ax * x + coef_retif_b;
-                        y_retas.push(y);
-                        y_retas.push(y);
-                        y_retas.push(y);
-                        y_retas.push(y);
-                        yshowMT_retas.push(y);
-                        data_y.push(y);
-                        y = y_retas[y_retas.length-1];
-                        iteracao_retif = iteracao_retif + 1;
-                    }
-                    if (x<=x_critico){//calc Y na reta de esgot e add ao y_retas
-                        y = coef_esgot_ax * x + coef_esgot_b;
-                        y_retas.push(y);
-                        y_retas.push(y);
-                        y_retas.push(y);
-                        y_retas.push(y);
-                        yshowMT_retas.push(y);
-                        data_y.push(y);
-                        y = y_retas[y_retas.length-1];
-                        iteracao_esgot = iteracao_esgot + 1;
-                    }
-                    if (x<xbmacthi){
-                        y_retas.splice(y_retas.length-1,1);// .splice(index,howmanyitens)
-                        y_retas.splice(y_retas.length-1,1);
-                        //remove ultimos pontos e substitui por (xb,xb)
-                        y_retas.splice(y_retas.length-1,1);
-                        y_retas.splice(y_retas.length-1,1);
-                        x_retas.splice(x_retas.length-1,1);
-                        x_retas.splice(x_retas.length-1,1);
-                        x_retas.splice(x_retas.length-1,1);
-                        x_retas.push(xbmacthi);
-                        data_y.splice(data_y[data_y.length-1],1);
-                        break;
-                    }
-                }
-                //percentual do ultimo prato = linha menor/linha maior
-                var perc = 0;pratos = 0;var prato_alim = 0;
-                var perc = (x_retas[x_retas.length-3]-x_retas[x_retas.length-1]) / (x_retas[x_retas.length-3]-x_retas[x_retas.length-2]);
-                pratos = iteracao_retif + iteracao_esgot + perc - 1;
-                var prato_alim = iteracao_retif + 1;
 
-                var coefs_rectif = [];var coefs_stripp = [];var coefs_q = [];
-                coefs_rectif.push([coef_retif_b]);coefs_rectif.push([coef_retif_ax]);
-                coefs_stripp.push([coef_esgot_b]);coefs_stripp.push([coef_esgot_ax]);
-                coefs_q.push([coef_lin_q_b]);coefs_q.push([coef_lin_q_ax]);
-                var solutionrectif = [];var solutionstripp = [];var solutionq = [];
-                for (var j=1;j>=0;j--){
-                    if (coefs_rectif[j]>0){solutionrectif = solutionrectif + ' + ' + coefs_rectif[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>';}
-                    else if (coefs_rectif[j]<0){solutionrectif = solutionrectif+ ' ' + coefs_rectif[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>';}
-                }
-                for (var j=1;j>=0;j--){
-                    if (coefs_stripp[j]>0){solutionstripp = solutionstripp + ' + ' + coefs_stripp[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>';}
-                    else if (coefs_stripp[j]<0){solutionstripp = solutionstripp+ ' ' + coefs_stripp[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>';}
-                }
-                for (var j=1;j>=0;j--){
-                    if (coefs_q[j]>0){solutionq = solutionq + ' + ' + coefs_q[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>';}
-                    else if (coefs_q[j]<0){solutionq = solutionq+ ' ' + coefs_q[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>';}
-                }
-                document.getElementById('resultsMTDiv').innerHTML = '<strong>Results (McCabe-Thiele): </strong><br><br>' + ' - Rectifying Section: ' +solutionrectif+ '<br><br>' + ' - Stripping Section: ' +solutionstripp+ '<br><br>'+' - q-line: ' +solutionq+ '<br><br>'+'Number of stages: '+pratos+'<br>Feed stage: '+prato_alim+'<br>Rmin: '+Rmin+'<br>Mass balance [kmol/h]: '+'F = '+Fmacthi+', B = '+B+', D = '+D;
-                plot(vet_xeq,vet_yeq,'Equilibrium data','markers',x_retas,y_retas,'McCabe-Thiele stages','lines',[0,1],[0,1],'Reference line','lines',x_lin_q,y_lin_q,'q-line (feed)','lines',x_lin_retif,y_lin_retif,'Rectfication Section','lines',x_lin_esgot,y_lin_esgot,'Stripping Section','lines',[xbmacthi,xbmacthi],[xbmacthi,y_retas[y_retas.length-1]],'','lines','plotMTDiv','McCabe-Thiele method','xA','yA');
+
+        function exampleinputs() {
+            document.getElementById("precision").value = 0.00001;
+            //antoine 
+            document.getElementById("P").value = 760;
+            document.getElementById("Aa").value = 7.23155;
+            document.getElementById("Ba").value = 1277.03;
+            document.getElementById("Ca").value = 237.22;
+            document.getElementById("Ab").value = 7.94915;
+            document.getElementById("Bb").value = 1657.46;
+            document.getElementById("Cb").value = 227.02;
+            document.getElementById("points").value = 100;
+            document.getElementById("degreeEq").value = 3;
+            //MT
+            document.getElementById("Rmacthi").value = 2;
+            document.getElementById("Fmacthi").value = 100.8;
+            document.getElementById("qmacthi").value = 1;
+            document.getElementById("zfmacthi").value = 0.42;
+            document.getElementById("xdmacthi").value = 0.95;
+            document.getElementById("xbmacthi").value = 0.04;
+            document.getElementById("MurEff").value = 1;
+            //PS
+            document.getElementById("zfponsav").value = 0.42;
+            document.getElementById("xdponsav").value = 0.95;
+            document.getElementById("xbponsav").value = 0.04;
+            document.getElementById("Rponsav").value = 2;
+            document.getElementById("qponsav").value = 1;
+            document.getElementById("Fponsav").value = 100.8;
+            document.getElementById("entalpVapA").value = 28762;
+            document.getElementById("entalpVapB").value = 42124;
+            document.getElementById("cpLA").value = 139.3;
+            document.getElementById("cpLB").value = 77.6;
+            document.getElementById("cpVA").value = 82.3;
+            document.getElementById("cpVB").value = 34.1;
+            document.getElementById("deltaHmist").value = 0;
+            document.getElementById("grauHV").value = 3;
+            document.getElementById("grauHL").value = 3;
+            //run
+            antoine();
+            mccabethiele(poly_eq);
+            ponchonsavarit(poly_eq);
+            profilesplot();
+        }
+
+
+        //function to antoine calculation
+        function antoine() {
+            var P = parseFloat(document.getElementById("P").value);
+            var Aa = parseFloat(document.getElementById("Aa").value);
+            var Ba = parseFloat(document.getElementById("Ba").value);
+            var Ca = parseFloat(document.getElementById("Ca").value);
+            var Ab = parseFloat(document.getElementById("Ab").value);
+            var Bb = parseFloat(document.getElementById("Bb").value);
+            var Cb = parseFloat(document.getElementById("Cb").value);
+            var points = parseFloat(document.getElementById("points").value);
+            order = parseFloat(document.getElementById("degreeEq").value);
+            precision = parseFloat(document.getElementById("precision").value);
+            //antoine equation, solved to obtain the temperature and to define the extremes of the range of temp
+            function antoine_temper(A, B, C, P) {
+                return (B / (A - (Math.log(P) / Math.log(10))) - C);
             }
+            var tem_A = antoine_temper(Aa, Ba, Ca, P);
+            var tem_B = antoine_temper(Ab, Bb, Cb, P);
+            //loop to obtain temperatures between the range, number of points variable
+            temp_range = [];
+            temp_range.push(tem_A);
+            var T = 0;
+            for (var i = 1; i < points; i++) {
+                T = tem_A + i * (tem_B - tem_A) / (points - 1);
+                temp_range.push(T);
+            }
+            //values to PS method
+            Tref = temp_range[0];
+            TsatB = temp_range[temp_range.length - 1];
+            document.getElementById("Tref").placeholder = Tref;
+            document.getElementById("TsatB").placeholder = TsatB;
+            //loop to obtain parcial pressures within the range and respectives equilibrium compositions
+            var vet_pA = []; var vet_pB = []; var pA = 0; var pB = 0;
+            for (var i = 0; i < temp_range.length; i++) {
+                pA = Math.pow(10, (Aa - Ba / (temp_range[i] + Ca)));
+                pB = Math.pow(10, (Ab - Bb / (temp_range[i] + Cb)));
+                vet_pA.push(pA);
+                vet_pB.push(pB);
+            }
+            vet_xeq = []; vet_yeq = []; var xA = 0; var yA = 0;
+            for (var i = 0; i < temp_range.length; i++) {
+                xA = (P - vet_pB[i]) / (vet_pA[i] - vet_pB[i]);
+                yA = (vet_pA[i] * xA) / P;
+                vet_xeq.push(xA);
+                vet_yeq.push(yA);
+            }
+            //call functions
+            poly_eq = [];
+            poly_eq = fit_gauss(vet_xeq, vet_yeq, order, '', poly_eq);
+            // Y AJUSTADO pelo poly e R2 ???
+            //var yajuste_eq = poly_eq(vet_xeq);
+            //colocar no plot yajuste_eq !!!
+            plot(vet_xeq, vet_yeq, 'Generated data', 'markers', [0, 1], [0, 1], 'Reference line', 'scatter', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'plotXYDiagDiv', 'xy-Diagram', 'xA', 'yA');
+            plot(vet_xeq, temp_range, 'Tx', 'markers', vet_yeq, temp_range, 'Ty', 'markers', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'plotTXYDiagDiv', 'Txy-Diagram', 'xA,yA', 'T[°C]');
+            var poleq = [];
+            for (var j = 0; j <= poly_eq.length; j++) {
+                if (poly_eq[j] > 0) { poleq = poleq + ' + ' + poly_eq[j] + ' * <strong>x<sup>' + (poly_eq.length - j - 1) + '</sup></strong>'; }
+                else if (poly_eq[j] < 0) { poleq = poleq + ' ' + poly_eq[j] + ' * <strong>x<sup>' + (poly_eq.length - j - 1) + '</sup></strong>'; }
+            }
+            document.getElementById('resultsEqDiv').innerHTML = '<strong>Results (Antoine): </strong><br><br>' + ' Equilibrium curve adjusted: <br><br>' + poleq;
+        }
 
 
-            //ponchon-savarit calculation function
-            function ponchonsavarit(poly_eq){
-                var zfponchon = parseFloat(document.getElementById("zfponsav").value);
-                var xdponchon = parseFloat(document.getElementById("xdponsav").value);
-                var xbponchon = parseFloat(document.getElementById("xbponsav").value);
-                var Rponchon = parseFloat(document.getElementById("Rponsav").value);
-                var Qponsav = parseFloat(document.getElementById("qponsav").value);
-                var Fponsav = parseFloat(document.getElementById("Fponsav").value);
-                var entalpVapA = parseFloat(document.getElementById("entalpVapA").value);
-                var entalpVapB = parseFloat(document.getElementById("entalpVapB").value);
-                cpLA = parseFloat(document.getElementById("cpLA").value);
-                cpLB = parseFloat(document.getElementById("cpLB").value);
-                var cpVA = parseFloat(document.getElementById("cpVA").value);
-                var cpVB = parseFloat(document.getElementById("cpVB").value);
-                deltaHmist = parseFloat(document.getElementById("deltaHmist").value);
-                grauHV = parseFloat(document.getElementById("grauHV").value);
-                grauHL = parseFloat(document.getElementById("grauHL").value);
+        //mccabe-thiele calculation function
+        function mccabethiele(poly_eq) {
 
-                if (Qponsav==1){Qponsav=Qponsav+0.0001;}
-                if (xbponchon>zfponchon){alert('Atenção! O valor de xB deve ser menor que zf!');return;}
-                if (xdponchon<zfponchon){alert('Atenção! O valor de xD deve ser maior que zf!');return;}
-                var vet_hL = [];var hL= 0;
-                var vet_hV = [];var hV= 0;
-                var vet_xentalp = vet_xeq;
-                var vet_yentalp = vet_yeq;
-                var vet_range_temp = temp_range;
-                //TsatB serve para corrigir entalpVapB (lambda B) //opçao para corrigir entalpVapA ???????????
-                var entalpVapBcorrigida = cpLB * (TsatB-Tref) + entalpVapB - cpVB * (TsatB-Tref);
-                for (xt=0;xt<=vet_xentalp.length-1;xt++){
-                        var hL = vet_xentalp[xt] * cpLA * (vet_range_temp[xt]-Tref) + (1-vet_xentalp[xt]) * cpLB * (vet_range_temp[xt]-Tref) + deltaHmist;
-                        vet_hL.push(hL);
+            var Rmacthi = parseFloat(document.getElementById("Rmacthi").value);
+            var Fmacthi = parseFloat(document.getElementById("Fmacthi").value);
+            var qmacthi = parseFloat(document.getElementById("qmacthi").value);
+            var zfmacthi = parseFloat(document.getElementById("zfmacthi").value);
+            var xdmacthi = parseFloat(document.getElementById("xdmacthi").value);
+            var xbmacthi = parseFloat(document.getElementById("xbmacthi").value);
+            var MurEffMT = parseFloat(document.getElementById("MurEff").value);
+
+            if (qmacthi == 1) { qmacthi = qmacthi + 0.0001; }
+            //mass balance
+            var B = Fmacthi * (zfmacthi - xdmacthi) / (xbmacthi - xdmacthi);
+            var D = Fmacthi * (1 - (zfmacthi - xdmacthi) / (xbmacthi - xdmacthi));
+            //line-q coefficients, feed
+            var coef_lin_q_ax = qmacthi / (qmacthi - 1);
+            var coef_lin_q_b = -zfmacthi / (qmacthi - 1);
+            //rectification line coefficients
+            var coef_retif_ax = Rmacthi / (Rmacthi + 1);
+            var coef_retif_b = xdmacthi / (Rmacthi + 1);
+            //rectif - feed = 0
+            var x_ra = coef_retif_ax - coef_lin_q_ax;
+            var cte_ra = coef_retif_b - coef_lin_q_b;
+            //interception rectif = feed
+            var x_intercep_ra = - cte_ra / x_ra;
+            var y_intercep_ra = coef_retif_ax * x_intercep_ra + coef_retif_b;
+            //equilibrium coefs already generated with antoine()
+            //equilibrium - feed = 0
+            var vet_coef = [];
+            for (var i = 0; i <= poly_eq.length - 1; i++) {
+                if (i == (poly_eq.length - 1)) { vet_coef.push(poly_eq[poly_eq.length - 1] - coef_lin_q_b); }
+                else if (i == (poly_eq.length - 2)) { vet_coef.push(poly_eq[poly_eq.length - 2] - coef_lin_q_ax); }
+                else { vet_coef.push(poly_eq[i]); }
+            }
+            var x_raizreal_macthi = 0;
+            var x_raizreal_macthi = root_bissection(vet_coef, order, 0, 1, precision, x_raizreal_macthi);
+            var y_eq_macthi = 0;
+            var y_eq_macthi = put_on_poly(x_raizreal_macthi, y_eq_macthi, poly_eq);
+            // lines feed, retific and stripping
+            var x_lin_q = [zfmacthi, x_intercep_ra];
+            var y_lin_q = [zfmacthi, y_intercep_ra];
+            var x_lin_retif = [xdmacthi, x_intercep_ra];
+            var y_lin_retif = [xdmacthi, y_intercep_ra];
+            var x_lin_esgot = [xbmacthi, x_intercep_ra];
+            var y_lin_esgot = [xbmacthi, y_intercep_ra];
+            var coefs_esgot = [];
+            var poly_esgot = fit_gauss(x_lin_esgot, y_lin_esgot, 1, 'resultsMTDiv', poly_esgot);
+            var coef_esgot_ax = poly_esgot[0];
+            var coef_esgot_b = poly_esgot[1];
+            var Rmin = (xdmacthi - y_eq_macthi) / (y_eq_macthi - x_raizreal_macthi);
+            if (Rmacthi < Rmin) { alert('Atenção! O valor de R deve ser maior que Rmin = ' + Rmin); return; }
+            //criteria to change from retif to stripping
+            var x_critico = x_intercep_ra;
+            if (xbmacthi > xdmacthi) { alert('Atenção! O valor de xB deve ser menor que xD = ' + xdmacthi); return; }
+            if (xbmacthi > x_critico) { alert('Atenção! O valor de xB deve ser menor que ' + x_critico); return; }
+            //inicial dots for the stages, yshow and xshow just to show y and x variation
+            var x_retas = [];
+            var y_retas = [];
+            xshowMT_retas = [];
+            yshowMT_retas = [];
+            y_retas.push(xdmacthi);
+            y_retas.push(xdmacthi);
+            y_retas.push(xdmacthi);
+            x_retas.push(xdmacthi);
+            xshowMT_retas.push(xdmacthi);
+            var x = x_retas[x_retas.length - 1];
+            var y = y_retas[1];
+            var iteracao_retif = 0;
+            var iteracao_esgot = 0;
+            var data_x = [];
+            var data_y = [];
+            //for the vapor profile: before add yD=xD, need to calculate the composition of vapor that would leave stage 1 (condenser)
+            //just pass xD to the poly_eq
+            var y_superior_a_xd_MT = 0;
+            var y_superior_a_xd_MT = put_on_poly(xdmacthi, y_superior_a_xd_MT, poly_eq);
+            data_y.push(y_superior_a_xd_MT);
+            data_y.push(xdmacthi);
+            data_x.push(xdmacthi);
+            yshowMT_retas.push(y_superior_a_xd_MT); yshowMT_retas.push(xdmacthi);
+            for (var i = 0; i <= 200; i++) {
+                var vetcoef_retas = [];
+                //do poly_eq - y = 0 and add raiz x to x_retas
+                for (var z = 0; z <= poly_eq.length - 1; z++) {
+                    if (z == (poly_eq.length - 1)) { vetcoef_retas.push(poly_eq[poly_eq.length - 1] - y); }
+                    else { vetcoef_retas.push(poly_eq[z]); }
                 }
-                for (yt=0;yt<=vet_yentalp.length-1;yt++){
-                    hV = vet_yentalp[yt] * (entalpVapA+cpVA*(vet_range_temp[yt]-Tref)) + (1-vet_yentalp[yt]) * (entalpVapBcorrigida+cpVB*(vet_range_temp[yt]-Tref));
-                    vet_hV.push(hV);
+                var raizXreal = [];
+                var raizXreal = root_bissection(vetcoef_retas, order, 0, 1, precision, raizXreal);
+                var xreal = 0;
+                xreal = MurEffMT * (raizXreal - x_retas[x_retas.length - 1]) + x_retas[x_retas.length - 1]; //liquid murphree relative eff
+                x_retas.push(xreal);
+                x_retas.push(xreal);
+                x_retas.push(xreal);
+                x_retas.push(xreal);
+                xshowMT_retas.push(xreal);
+                data_x.push(xreal);
+                x = x_retas[x_retas.length - 1];
+                if (x > x_critico) { //calc Y na reta de retif e add ao y_retas
+                    y = coef_retif_ax * x + coef_retif_b;
+                    y_retas.push(y);
+                    y_retas.push(y);
+                    y_retas.push(y);
+                    y_retas.push(y);
+                    yshowMT_retas.push(y);
+                    data_y.push(y);
+                    y = y_retas[y_retas.length - 1];
+                    iteracao_retif = iteracao_retif + 1;
                 }
-                //Ajustando um polinômio 'grauH' para vet_xentalp versus vet_hL & vet_yentalp versus vet_hV
-                var poly_HL = [];
-                var poly_HL = fit_gauss(vet_xentalp,vet_hL,grauHL,'',poly_HL);
-                var poly_HV = [];
-                var poly_HV = fit_gauss(vet_yentalp,vet_hV,grauHV,'',poly_HV);
-                //Y AJUSTADO pelo poly e R2?
-                //var yajuste_hL = poly_HL(vet_xentalp);
-                //colocar no plot yajuste_hL !!!
-                //var yajuste_hV = poly_HV(vet_yentalp)
-                //colocar no plot yajuste_hV !!!
-                //poly_eq - feed = 0
-                //calculo das composicoes em eq na alimentacao,intersecao do pol da curva de eq com reta linha-q
-                var coef_a = Qponsav / (Qponsav-1);
-                var coef_b = - zfponchon / (Qponsav-1);
-                //equilibrium coefs already generated with antoine()
-                //equilibrium - feed = 0
-                var new_coef = [];
-                for (var i=0;i<=poly_eq.length-1;i++){
-                    if (i==(poly_eq.length-1)){new_coef.push(poly_eq[poly_eq.length-1]-coef_b);}
-                    else if (i==(poly_eq.length-2)){new_coef.push(poly_eq[poly_eq.length-2]-coef_a);}
-                    else {new_coef.push(poly_eq[i]);}
+                if (x <= x_critico) {//calc Y na reta de esgot e add ao y_retas
+                    y = coef_esgot_ax * x + coef_esgot_b;
+                    y_retas.push(y);
+                    y_retas.push(y);
+                    y_retas.push(y);
+                    y_retas.push(y);
+                    yshowMT_retas.push(y);
+                    data_y.push(y);
+                    y = y_retas[y_retas.length - 1];
+                    iteracao_esgot = iteracao_esgot + 1;
                 }
-                var x_zf = 0;
-                var x_zf = root_bissection(new_coef,order,0,1,precision,x_zf);
-                //substitui valor de x_zf no pol_hL
-                var hL_zf = 0;
-                var hL_zf = put_on_poly(x_zf,hL_zf,poly_HL);
-                //encontra o valor correspondente de y no eq
-                var y_zf = 0;
-                var y_zf = put_on_poly(x_zf,y_zf,poly_eq);
-                //substitui valor de y_zf no pol_hV
-                var hV_zf = 0;
-                var hV_zf = put_on_poly(y_zf,hV_zf,poly_HV);
-                //entalpia hF correspondente a alimentacao ponto (hF,zfponchon), alimentacao em varias condicoes
-                var hF = hV_zf - Qponsav * (hV_zf-hL_zf);
-                //entalpia hD correspondente ao destilado ponto (D,xD)
-                var hL_xD = 0;
-                var hL_xD = put_on_poly(xdponchon,hL_xD,poly_HL);
-                var hV_xD = 0;
-                var hV_xD = put_on_poly(xdponchon,hV_xD,poly_HV);
-                var hD_linha = Rponchon * (hV_xD-hL_xD) + hV_xD;
-                //entalpia hB correspondente ao destilado ponto (B,xB)
-                var hL_xB = 0;
-                var hL_xB = put_on_poly(xbponchon,hL_xB,poly_HL);
-                //calculo da reta e o ponto em que intercepta a reta x=xB, F D e B são colineares p/ processo adiabatico
-                var poly_reta_Dlin_F = [];
-                var poly_reta_Dlin_F = fit_gauss([xdponchon,zfponchon],[hD_linha,hF],1,'',poly_reta_Dlin_F);
-                var pontoyBlin = [];
-                var pontoyBlin = put_on_poly(xbponchon,pontoyBlin,poly_reta_Dlin_F);
-                //calculo de Rmin, inclinacao da reta de uniao de eq da alim deve ser igual a uma reta que encontra a reta que passa por hL_xD e hV_xD
-                var hD_linha_min = ((hV_zf-hL_zf)/(y_zf-x_zf)) * (xdponchon-zfponchon) + hF;
-                var Rmin_ponsav = (hD_linha_min-hV_xD) / (hV_xD-hL_xD);
-                if (Rponchon<Rmin_ponsav){alert("Atenção! O valor de R deve ser maior que Rmin = "+Rmin_ponsav);return;}
-                //calculo das cargas no condensador e referverdor
-                var Bfundo = Fponsav * (zfponchon-xdponchon) / (xbponchon-xdponchon);
-                var Dtopo = Fponsav * (1-(zfponchon-xdponchon) / (xbponchon-xdponchon));
-                Qr = (-pontoyBlin+hL_xB) * Bfundo;
-                Qc = (hD_linha-hV_xD) * Dtopo;
-                //vetores com os pontos colineares da alimentacao e produtos, pontos(Dlinha,F,Blinha), e pontos da linha de uniao de equilibrio na alimentacao  
-                var vetx_alim_prod = [xdponchon,xdponchon,xdponchon,xbponchon,xbponchon];
-                var vety_alim_prod = [hL_xD,hV_xD,hD_linha,pontoyBlin,hL_xB];
-                var vet_eq_alimPonsavX = [x_zf,y_zf];
-                var vet_eq_alimPonsavY = [hL_zf,hV_zf];
-                //vetores para pontos das retas das linhas de uniao
-                var uniao_xy = [];var uniao_h = [];
-                //polinomio 3o grau da curva de equilibrio da aba ELV para encontrar xhl, na linha de uniao
-                var polequi = poly_eq;
-                var iteration_retif = 0;
-                var iteration_esgot = 0;
-                var yhv = xdponchon;
-                var hV = hV_xD;
-                //controle de mudanca de hD_linha para hB_linha, obtendo xcontrole, ponto no qual a linha hd_linha e hf cruza em pol_hL
-                //cria reta entre o ponto em hD_linha ao ponto hF e encontra intersecao x_controle com pol_hL
-                var poly_linha_hdlinha_hf = [];
-                var vetzfxd = [zfponchon,xdponchon];var vethfhdlinha = [hF,hD_linha];
-                var poly_linha_hdlinha_hf = fit_gauss(vetzfxd,vethfhdlinha,1,'',poly_linha_hdlinha_hf);
-                //reta hD_linha e hF - pol_hL
-                var coef_pol_hlinha_hf_hL = [];
-                for (var i=0;i<=poly_HL.length-1;i++){
-                    if (i==(poly_HL.length-1)){coef_pol_hlinha_hf_hL.push(poly_HL[poly_HL.length-1]-poly_linha_hdlinha_hf[poly_linha_hdlinha_hf.length-1]);}
-                    else if (i==(poly_HL.length-2)){coef_pol_hlinha_hf_hL.push(poly_HL[poly_HL.length-2]-poly_linha_hdlinha_hf[poly_linha_hdlinha_hf.length-2]);}
-                    else {coef_pol_hlinha_hf_hL.push(poly_HL[i]);}
+                if (x < xbmacthi) {
+                    y_retas.splice(y_retas.length - 1, 1);// .splice(index,howmanyitens)
+                    y_retas.splice(y_retas.length - 1, 1);
+                    //remove ultimos pontos e substitui por (xb,xb)
+                    y_retas.splice(y_retas.length - 1, 1);
+                    y_retas.splice(y_retas.length - 1, 1);
+                    x_retas.splice(x_retas.length - 1, 1);
+                    x_retas.splice(x_retas.length - 1, 1);
+                    x_retas.splice(x_retas.length - 1, 1);
+                    x_retas.push(xbmacthi);
+                    data_y.splice(data_y[data_y.length - 1], 1);
+                    break;
                 }
-                var xcontrole = 0;
-                var xcontrole = root_bissection(coef_pol_hlinha_hf_hL,grauHL,0,1,precision,xcontrole);
-                //vetor para armazenar as T da corrente liquida para plotar perfil de Temperatura
-                temps_x = [];temps_y = [];var y_superior_a_xd_PS = [];
-                //PARA PERFIL DO VAPOR: antes de add yD=xD, calcular a composiçao do vapor que sairia do prato 1 (condensador)
-                //basta substituir xD no pol ajustado para a curva de equilibrio
-                var y_superior_a_xd_PS = put_on_poly(xdponchon,y_superior_a_xd_PS,poly_eq);
-                temps_y.push(y_superior_a_xd_PS);
-                temps_x.push(yhv);
-                entalps_V = [];entalps_L = [];
-                var hV = 0;
-                var hV = put_on_poly(y_superior_a_xd_PS,hV,poly_HV);
+            }
+            //percentual do ultimo prato = linha menor/linha maior
+            var perc = 0; pratos = 0; var prato_alim = 0;
+            var perc = (x_retas[x_retas.length - 3] - x_retas[x_retas.length - 1]) / (x_retas[x_retas.length - 3] - x_retas[x_retas.length - 2]);
+            pratos = iteracao_retif + iteracao_esgot + perc - 1;
+            var prato_alim = iteracao_retif + 1;
+
+            var coefs_rectif = []; var coefs_stripp = []; var coefs_q = [];
+            coefs_rectif.push([coef_retif_b]); coefs_rectif.push([coef_retif_ax]);
+            coefs_stripp.push([coef_esgot_b]); coefs_stripp.push([coef_esgot_ax]);
+            coefs_q.push([coef_lin_q_b]); coefs_q.push([coef_lin_q_ax]);
+            var solutionrectif = []; var solutionstripp = []; var solutionq = [];
+            for (var j = 1; j >= 0; j--) {
+                if (coefs_rectif[j] > 0) { solutionrectif = solutionrectif + ' + ' + coefs_rectif[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>'; }
+                else if (coefs_rectif[j] < 0) { solutionrectif = solutionrectif + ' ' + coefs_rectif[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>'; }
+            }
+            for (var j = 1; j >= 0; j--) {
+                if (coefs_stripp[j] > 0) { solutionstripp = solutionstripp + ' + ' + coefs_stripp[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>'; }
+                else if (coefs_stripp[j] < 0) { solutionstripp = solutionstripp + ' ' + coefs_stripp[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>'; }
+            }
+            for (var j = 1; j >= 0; j--) {
+                if (coefs_q[j] > 0) { solutionq = solutionq + ' + ' + coefs_q[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>'; }
+                else if (coefs_q[j] < 0) { solutionq = solutionq + ' ' + coefs_q[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>'; }
+            }
+            document.getElementById('resultsMTDiv').innerHTML = '<strong>Results (McCabe-Thiele): </strong><br><br>' + 'Rectifying Section: ' + solutionrectif + '<br><br>' + 'Stripping Section: ' + solutionstripp + '<br><br>' + 'q-line: ' + solutionq + '<br><br>' + 'Number of stages: ' + pratos + '<br>Feed stage: ' + prato_alim + '<br>Rmin: ' + Rmin + '<br>Mass balance [kmol/h]: ' + 'F = ' + Fmacthi + ', B = ' + B + ', D = ' + D;
+            plot(vet_xeq, vet_yeq, 'Equilibrium data', 'markers', x_retas, y_retas, 'McCabe-Thiele stages', 'lines', [0, 1], [0, 1], 'Reference line', 'lines', x_lin_q, y_lin_q, 'q-line (feed)', 'lines', x_lin_retif, y_lin_retif, 'Rectfication Section', 'lines', x_lin_esgot, y_lin_esgot, 'Stripping Section', 'lines', [xbmacthi, xbmacthi], [xbmacthi, y_retas[y_retas.length - 1]], '', 'lines', 'plotMTDiv', 'McCabe-Thiele method', 'xA', 'yA');
+        }
+
+
+        //ponchon-savarit calculation function
+        function ponchonsavarit(poly_eq) {
+            var zfponchon = parseFloat(document.getElementById("zfponsav").value);
+            var xdponchon = parseFloat(document.getElementById("xdponsav").value);
+            var xbponchon = parseFloat(document.getElementById("xbponsav").value);
+            var Rponchon = parseFloat(document.getElementById("Rponsav").value);
+            var Qponsav = parseFloat(document.getElementById("qponsav").value);
+            var Fponsav = parseFloat(document.getElementById("Fponsav").value);
+            var entalpVapA = parseFloat(document.getElementById("entalpVapA").value);
+            var entalpVapB = parseFloat(document.getElementById("entalpVapB").value);
+            cpLA = parseFloat(document.getElementById("cpLA").value);
+            cpLB = parseFloat(document.getElementById("cpLB").value);
+            var cpVA = parseFloat(document.getElementById("cpVA").value);
+            var cpVB = parseFloat(document.getElementById("cpVB").value);
+            deltaHmist = parseFloat(document.getElementById("deltaHmist").value);
+            grauHV = parseFloat(document.getElementById("grauHV").value);
+            grauHL = parseFloat(document.getElementById("grauHL").value);
+
+            if (Qponsav == 1) { Qponsav = Qponsav + 0.0001; }
+            if (xbponchon > zfponchon) { alert('Atenção! O valor de xB deve ser menor que zf!'); return; }
+            if (xdponchon < zfponchon) { alert('Atenção! O valor de xD deve ser maior que zf!'); return; }
+            var vet_hL = []; var hL = 0;
+            var vet_hV = []; var hV = 0;
+            var vet_xentalp = vet_xeq;
+            var vet_yentalp = vet_yeq;
+            var vet_range_temp = temp_range;
+            //TsatB serve para corrigir entalpVapB (lambda B) //opçao para corrigir entalpVapA ???????????
+            var entalpVapBcorrigida = cpLB * (TsatB - Tref) + entalpVapB - cpVB * (TsatB - Tref);
+            for (xt = 0; xt <= vet_xentalp.length - 1; xt++) {
+                var hL = vet_xentalp[xt] * cpLA * (vet_range_temp[xt] - Tref) + (1 - vet_xentalp[xt]) * cpLB * (vet_range_temp[xt] - Tref) + deltaHmist;
+                vet_hL.push(hL);
+            }
+            for (yt = 0; yt <= vet_yentalp.length - 1; yt++) {
+                hV = vet_yentalp[yt] * (entalpVapA + cpVA * (vet_range_temp[yt] - Tref)) + (1 - vet_yentalp[yt]) * (entalpVapBcorrigida + cpVB * (vet_range_temp[yt] - Tref));
+                vet_hV.push(hV);
+            }
+            //Ajustando um polinômio 'grauH' para vet_xentalp versus vet_hL & vet_yentalp versus vet_hV
+            var poly_HL = [];
+            var poly_HL = fit_gauss(vet_xentalp, vet_hL, grauHL, '', poly_HL);
+            var poly_HV = [];
+            var poly_HV = fit_gauss(vet_yentalp, vet_hV, grauHV, '', poly_HV);
+            //Y AJUSTADO pelo poly e R2?
+            //var yajuste_hL = poly_HL(vet_xentalp);
+            //colocar no plot yajuste_hL !!!
+            //var yajuste_hV = poly_HV(vet_yentalp)
+            //colocar no plot yajuste_hV !!!
+            //poly_eq - feed = 0
+            //calculo das composicoes em eq na alimentacao,intersecao do pol da curva de eq com reta linha-q
+            var coef_a = Qponsav / (Qponsav - 1);
+            var coef_b = - zfponchon / (Qponsav - 1);
+            //equilibrium coefs already generated with antoine()
+            //equilibrium - feed = 0
+            var new_coef = [];
+            for (var i = 0; i <= poly_eq.length - 1; i++) {
+                if (i == (poly_eq.length - 1)) { new_coef.push(poly_eq[poly_eq.length - 1] - coef_b); }
+                else if (i == (poly_eq.length - 2)) { new_coef.push(poly_eq[poly_eq.length - 2] - coef_a); }
+                else { new_coef.push(poly_eq[i]); }
+            }
+            var x_zf = 0;
+            var x_zf = root_bissection(new_coef, order, 0, 1, precision, x_zf);
+            //substitui valor de x_zf no pol_hL
+            var hL_zf = 0;
+            var hL_zf = put_on_poly(x_zf, hL_zf, poly_HL);
+            //encontra o valor correspondente de y no eq
+            var y_zf = 0;
+            var y_zf = put_on_poly(x_zf, y_zf, poly_eq);
+            //substitui valor de y_zf no pol_hV
+            var hV_zf = 0;
+            var hV_zf = put_on_poly(y_zf, hV_zf, poly_HV);
+            //entalpia hF correspondente a alimentacao ponto (hF,zfponchon), alimentacao em varias condicoes
+            var hF = hV_zf - Qponsav * (hV_zf - hL_zf);
+            //entalpia hD correspondente ao destilado ponto (D,xD)
+            var hL_xD = 0;
+            var hL_xD = put_on_poly(xdponchon, hL_xD, poly_HL);
+            var hV_xD = 0;
+            var hV_xD = put_on_poly(xdponchon, hV_xD, poly_HV);
+            var hD_linha = Rponchon * (hV_xD - hL_xD) + hV_xD;
+            //entalpia hB correspondente ao destilado ponto (B,xB)
+            var hL_xB = 0;
+            var hL_xB = put_on_poly(xbponchon, hL_xB, poly_HL);
+            //calculo da reta e o ponto em que intercepta a reta x=xB, F D e B são colineares p/ processo adiabatico
+            var poly_reta_Dlin_F = [];
+            var poly_reta_Dlin_F = fit_gauss([xdponchon, zfponchon], [hD_linha, hF], 1, '', poly_reta_Dlin_F);
+            var pontoyBlin = [];
+            var pontoyBlin = put_on_poly(xbponchon, pontoyBlin, poly_reta_Dlin_F);
+            //calculo de Rmin, inclinacao da reta de uniao de eq da alim deve ser igual a uma reta que encontra a reta que passa por hL_xD e hV_xD
+            var hD_linha_min = ((hV_zf - hL_zf) / (y_zf - x_zf)) * (xdponchon - zfponchon) + hF;
+            var Rmin_ponsav = (hD_linha_min - hV_xD) / (hV_xD - hL_xD);
+            if (Rponchon < Rmin_ponsav) { alert("Atenção! O valor de R deve ser maior que Rmin = " + Rmin_ponsav); return; }
+            //calculo das cargas no condensador e referverdor
+            var Bfundo = Fponsav * (zfponchon - xdponchon) / (xbponchon - xdponchon);
+            var Dtopo = Fponsav * (1 - (zfponchon - xdponchon) / (xbponchon - xdponchon));
+            Qr = (-pontoyBlin + hL_xB) * Bfundo;
+            Qc = (hD_linha - hV_xD) * Dtopo;
+            //vetores com os pontos colineares da alimentacao e produtos, pontos(Dlinha,F,Blinha), e pontos da linha de uniao de equilibrio na alimentacao  
+            var vetx_alim_prod = [xdponchon, xdponchon, xdponchon, xbponchon, xbponchon];
+            var vety_alim_prod = [hL_xD, hV_xD, hD_linha, pontoyBlin, hL_xB];
+            var vet_eq_alimPonsavX = [x_zf, y_zf];
+            var vet_eq_alimPonsavY = [hL_zf, hV_zf];
+            //vetores para pontos das retas das linhas de uniao
+            var uniao_xy = []; var uniao_h = [];
+            //polinomio 3o grau da curva de equilibrio da aba ELV para encontrar xhl, na linha de uniao
+            var polequi = poly_eq;
+            var iteration_retif = 0;
+            var iteration_esgot = 0;
+            var yhv = xdponchon;
+            var hV = hV_xD;
+            //controle de mudanca de hD_linha para hB_linha, obtendo xcontrole, ponto no qual a linha hd_linha e hf cruza em pol_hL
+            //cria reta entre o ponto em hD_linha ao ponto hF e encontra intersecao x_controle com pol_hL
+            var poly_linha_hdlinha_hf = [];
+            var vetzfxd = [zfponchon, xdponchon]; var vethfhdlinha = [hF, hD_linha];
+            var poly_linha_hdlinha_hf = fit_gauss(vetzfxd, vethfhdlinha, 1, '', poly_linha_hdlinha_hf);
+            //reta hD_linha e hF - pol_hL
+            var coef_pol_hlinha_hf_hL = [];
+            for (var i = 0; i <= poly_HL.length - 1; i++) {
+                if (i == (poly_HL.length - 1)) { coef_pol_hlinha_hf_hL.push(poly_HL[poly_HL.length - 1] - poly_linha_hdlinha_hf[poly_linha_hdlinha_hf.length - 1]); }
+                else if (i == (poly_HL.length - 2)) { coef_pol_hlinha_hf_hL.push(poly_HL[poly_HL.length - 2] - poly_linha_hdlinha_hf[poly_linha_hdlinha_hf.length - 2]); }
+                else { coef_pol_hlinha_hf_hL.push(poly_HL[i]); }
+            }
+            var xcontrole = 0;
+            var xcontrole = root_bissection(coef_pol_hlinha_hf_hL, grauHL, 0, 1, precision, xcontrole);
+            //vetor para armazenar as T da corrente liquida para plotar perfil de Temperatura
+            temps_x = []; temps_y = []; var y_superior_a_xd_PS = [];
+            //PARA PERFIL DO VAPOR: antes de add yD=xD, calcular a composiçao do vapor que sairia do prato 1 (condensador)
+            //basta substituir xD no pol ajustado para a curva de equilibrio
+            var y_superior_a_xd_PS = put_on_poly(xdponchon, y_superior_a_xd_PS, poly_eq);
+            temps_y.push(y_superior_a_xd_PS);
+            temps_x.push(yhv);
+            entalps_V = []; entalps_L = [];
+            var hV = 0;
+            var hV = put_on_poly(y_superior_a_xd_PS, hV, poly_HV);
+            entalps_V.push(hV);
+            //cria ponto do liquido destilado pelo condensador
+            //add ponto (xhl,hL)
+            var hL = put_on_poly(xdponchon, hL, poly_HL);
+            entalps_L.push(hL);
+            xshowPS_retas = [];
+            yshowPS_retas = [];
+            xshowPS_retas.push(xdponchon); yshowPS_retas.push(y_superior_a_xd_PS); yshowPS_retas.push(xdponchon);
+            for (n = 0; n <= 200; n++) {
+                //add ponto (yhv,hV)
+                uniao_xy.push(yhv);
+                var hV = put_on_poly(yhv, hV, poly_HV);
+                uniao_h.push(hV);
                 entalps_V.push(hV);
-                //cria ponto do liquido destilado pelo condensador
+                temps_y.push(yhv);
+                //passo para encontrar (xhl,hL) em eq com yhv
+                coefEq_new = [];
+                for (var i = 0; i <= poly_eq.length - 1; i++) {
+                    if (i == (poly_eq.length - 1)) { coefEq_new.push(poly_eq[poly_eq.length - 1] - uniao_xy[uniao_xy.length - 1]); }
+                    else { coefEq_new.push(poly_eq[i]); }
+                }
+                var xhl = 0;
+                var xhl = root_bissection(coefEq_new, order, 0, 1, precision, xhl);
                 //add ponto (xhl,hL)
-                var hL = put_on_poly(xdponchon,hL,poly_HL);
+                uniao_xy.push(xhl);
+                var hL = put_on_poly(xhl, hL, poly_HL);
+                uniao_h.push(hL);
+                temps_x.push(xhl);
                 entalps_L.push(hL);
-                xshowPS_retas = [];
-                yshowPS_retas = [];
-                xshowPS_retas.push(xdponchon);yshowPS_retas.push(y_superior_a_xd_PS);yshowPS_retas.push(xdponchon);
-                for (n=0;n<=200;n++){
-                    //add ponto (yhv,hV)
-                    uniao_xy.push(yhv);
-                    var hV = put_on_poly(yhv,hV,poly_HV);
-                    uniao_h.push(hV);
+                xshowPS_retas.push(xhl);
+                if (xhl > xcontrole) {//cria reta entre o ponto em hL ao ponto Dlinha e encontra intersecao (yhv) com pol_hV
+                    var coef_uniao_hL_Dlin = [];
+                    var coef_uniao_hL_Dlin = fit_gauss([xhl, xdponchon], [hL, hD_linha], 1, '', coef_uniao_hL_Dlin);
+                    var new_coef_pol_hV = [];
+                    for (var i = 0; i <= poly_HV.length - 1; i++) {
+                        if (i == (poly_HV.length - 1)) { new_coef_pol_hV.push(poly_HV[poly_HV.length - 1] - coef_uniao_hL_Dlin[coef_uniao_hL_Dlin.length - 1]); }
+                        else if (i == (poly_HV.length - 2)) { new_coef_pol_hV.push(poly_HV[poly_HV.length - 2] - coef_uniao_hL_Dlin[coef_uniao_hL_Dlin.length - 2]); }
+                        else { new_coef_pol_hV.push(poly_HV[i]); }
+                    }
+                    var yhv = 0;
+                    var yhv = root_bissection(new_coef_pol_hV, grauHV, 0, 1, precision, yhv);
+                    yshowPS_retas.push(yhv);
+                    var iteration_retif = iteration_retif + 1;
+                }
+                if (xhl <= xcontrole) {//cria reta entre o ponto em hL ao ponto Blinha e encontra intersecao (yhv) com pol_hV
+                    var coef_uniao_hL_Blin = [];
+                    var coef_uniao_hL_Blin = fit_gauss([xhl, xbponchon], [hL, pontoyBlin], 1, '', coef_uniao_hL_Blin);
+                    var new_coef_pol_hV = [];
+                    for (var i = 0; i <= poly_HV.length - 1; i++) {
+                        if (i == (poly_HV.length - 1)) { new_coef_pol_hV.push(poly_HV[poly_HV.length - 1] - coef_uniao_hL_Blin[coef_uniao_hL_Blin.length - 1]); }
+                        else if (i == (poly_HV.length - 2)) { new_coef_pol_hV.push(poly_HV[poly_HV.length - 2] - coef_uniao_hL_Blin[coef_uniao_hL_Blin.length - 2]); }
+                        else { new_coef_pol_hV.push(poly_HV[i]); }
+                    }
+                    var yhv = 0;
+                    var yhv = root_bissection(new_coef_pol_hV, grauHV, 0, 1, precision, yhv);
+                    yshowPS_retas.push(yhv);
+                    var iteration_esgot = iteration_esgot + 1;
+                }
+                if (xhl < xbponchon) {//cria reta entre o ponto em hL ao ponto Blinha e encontra ULTIMA intersecao (yhv) com pol_hV
+                    var coef_uniao_hL_Blin = [];
+                    var coef_uniao_hL_Blin = fit_gauss([xhl, xbponchon], [hL, pontoyBlin], 1, '', coef_uniao_hL_Blin);
+                    var new_coef_pol_hV = [];
+                    for (var i = 0; i <= poly_HV.length - 1; i++) {
+                        if (i == (poly_HV.length - 1)) { new_coef_pol_hV.push(poly_HV[poly_HV.length - 1] - coef_uniao_hL_Blin[coef_uniao_hL_Blin.length - 1]); }
+                        else if (i == (poly_HV.length - 2)) { new_coef_pol_hV.push(poly_HV[poly_HV.length - 2] - coef_uniao_hL_Blin[coef_uniao_hL_Blin.length - 2]); }
+                        else { new_coef_pol_hV.push(poly_HV[i]); }
+                    }
+                    var yhv = 0;
+                    var yhv = root_bissection(new_coef_pol_hV, grauHV, 0, 1, precision, yhv);
+                    var hV = put_on_poly(yhv, hV, poly_HV);
                     entalps_V.push(hV);
-                    temps_y.push(yhv);
-                    //passo para encontrar (xhl,hL) em eq com yhv
-                    coefEq_new = [];
-                    for (var i=0;i<=poly_eq.length-1;i++){
-                        if (i==(poly_eq.length-1)){coefEq_new.push(poly_eq[poly_eq.length-1]-uniao_xy[uniao_xy.length-1]);}
-                        else {coefEq_new.push(poly_eq[i]);}
-                    }
-                    var xhl = 0;
-                    var xhl = root_bissection(coefEq_new,order,0,1,precision,xhl);
-                    //add ponto (xhl,hL)
-                    uniao_xy.push(xhl);
-                    var hL = put_on_poly(xhl,hL,poly_HL);
-                    uniao_h.push(hL);
-                    temps_x.push(xhl);
-                    entalps_L.push(hL);
-                    xshowPS_retas.push(xhl);
-                    if (xhl>xcontrole){//cria reta entre o ponto em hL ao ponto Dlinha e encontra intersecao (yhv) com pol_hV
-                        var coef_uniao_hL_Dlin = [];
-                        var coef_uniao_hL_Dlin = fit_gauss([xhl,xdponchon],[hL,hD_linha],1,'',coef_uniao_hL_Dlin);
-                        var new_coef_pol_hV = [];
-                        for (var i=0;i<=poly_HV.length-1;i++){
-                            if (i==(poly_HV.length-1)){new_coef_pol_hV.push(poly_HV[poly_HV.length-1]-coef_uniao_hL_Dlin[coef_uniao_hL_Dlin.length-1]);}
-                            else if (i==(poly_HV.length-2)){new_coef_pol_hV.push(poly_HV[poly_HV.length-2]-coef_uniao_hL_Dlin[coef_uniao_hL_Dlin.length-2]);}
-                            else {new_coef_pol_hV.push(poly_HV[i]);}
-                        }
-                        var yhv = 0;
-                        var yhv = root_bissection(new_coef_pol_hV,grauHV,0,1,precision,yhv);
-                        yshowPS_retas.push(yhv);
-                        var iteration_retif = iteration_retif + 1;
-                    }
-                    if (xhl<=xcontrole){//cria reta entre o ponto em hL ao ponto Blinha e encontra intersecao (yhv) com pol_hV
-                        var coef_uniao_hL_Blin = [];
-                        var coef_uniao_hL_Blin = fit_gauss([xhl,xbponchon],[hL,pontoyBlin],1,'',coef_uniao_hL_Blin);
-                        var new_coef_pol_hV = [];
-                        for (var i=0;i<=poly_HV.length-1;i++){
-                            if (i==(poly_HV.length-1)){new_coef_pol_hV.push(poly_HV[poly_HV.length-1]-coef_uniao_hL_Blin[coef_uniao_hL_Blin.length-1]);}
-                            else if (i==(poly_HV.length-2)){new_coef_pol_hV.push(poly_HV[poly_HV.length-2]-coef_uniao_hL_Blin[coef_uniao_hL_Blin.length-2]);}
-                            else {new_coef_pol_hV.push(poly_HV[i]);}
-                        }
-                        var yhv = 0;
-                        var yhv = root_bissection(new_coef_pol_hV,grauHV,0,1,precision,yhv);
-                        yshowPS_retas.push(yhv);
-                        var iteration_esgot = iteration_esgot + 1;
-                    }
-                    if (xhl<xbponchon){//cria reta entre o ponto em hL ao ponto Blinha e encontra ULTIMA intersecao (yhv) com pol_hV
-                        var coef_uniao_hL_Blin = [];
-                        var coef_uniao_hL_Blin = fit_gauss([xhl,xbponchon],[hL,pontoyBlin],1,'',coef_uniao_hL_Blin);
-                        var new_coef_pol_hV = [];
-                        for (var i=0;i<=poly_HV.length-1;i++){
-                            if (i==(poly_HV.length-1)){new_coef_pol_hV.push(poly_HV[poly_HV.length-1]-coef_uniao_hL_Blin[coef_uniao_hL_Blin.length-1]);}
-                            else if (i==(poly_HV.length-2)){new_coef_pol_hV.push(poly_HV[poly_HV.length-2]-coef_uniao_hL_Blin[coef_uniao_hL_Blin.length-2]);}
-                            else {new_coef_pol_hV.push(poly_HV[i]);}
-                        }
-                        var yhv = 0;
-                        var yhv = root_bissection(new_coef_pol_hV,grauHV,0,1,precision,yhv);
-                        var hV = put_on_poly(yhv,hV,poly_HV);
-                        entalps_V.push(hV);
-                        break;
-                    }
-                }
-                iteration = 0;
-                iteration = iteration_retif + iteration_esgot;
-                plot(vet_xentalp,vet_hL,'Liquid enthalpy line','markers',vet_yentalp,vet_hV,'Vapor enthalpy line','markers',vetx_alim_prod,vety_alim_prod,'Energy balance','lines',uniao_xy,uniao_h,'Ponchon-Savarit stages','lines',vet_eq_alimPonsavX,vet_eq_alimPonsavY,'q-line (feed)','lines','','','','lines','','','','lines','plotPSDiv','Ponchon-Savarit method','xA,yA','H [kJ/kmol]');
-                
-                var polhl = [];var polhv = 0;
-                for (var j=0;j<=poly_HL.length;j++){
-                    if (poly_HL[j]>0){polhl = polhl + ' + ' + poly_HL[j] + ' * <strong>x<sup>' + (poly_HL.length-j-1) + '</sup></strong>';}
-                    else if (poly_HL[j]<0){polhl = polhl + ' ' + poly_HL[j] + ' * <strong>x<sup>' + (poly_HL.length-j-1) + '</sup></strong>';}
-                }
-                for (var j=0;j<=poly_HV.length;j++){
-                    if (poly_HV[j]>0){polhv = polhv + ' + ' + poly_HV[j] + ' * <strong>x<sup>' + (poly_HV.length-j-1) + '</sup></strong>';}
-                    else if (poly_HV[j]<0){polhv = polhv + ' ' + poly_HV[j] + ' * <strong>x<sup>' + (poly_HV.length-j-1) + '</sup></strong>';}
-                }
-                document.getElementById('resultsPSDiv').innerHTML = '<strong>Results (Ponchon-Savarit): </strong><br><br>' + ' - Liquid enthalpy curve adjusted: <br>' +polhl+ '<br><br>- Vapor enthalpy curve adjusted: <br>' +polhv+ '<br><br>Number of stages: ' +iteration+ '<br>Feed stage: ' +(iteration_retif+1)+ '<br>Rmin: ' +Rmin_ponsav+ '<br>Mass balance [kmol/h]: '+'F = '+Fponsav+', B = '+Bfundo+', D = '+Dtopo+ '<br>Energy balance:<br>'+'Feed = '+hF+' kJ/kmol , Qr (reboiler duty) = '+Qr+' kW , Qc (condenser duty) = '+Qc+' kW';
-            }
-
-
-            function profilesplot(){
-
-                //xy MT
-                stageMT = Math.ceil(pratos);
-                pratosMT = [];
-                for (i=1;i<=stageMT+1;i++){pratosMT.push(i);}
-                xBshowMT_retas = [];
-                for (i=0;i<=xshowMT_retas.length-1;i++){xBshowMT_retas.push(1-xshowMT_retas[i]);}
-                yBshowMT_retas = [];
-                for (i=0;i<=yshowMT_retas.length-1;i++){yBshowMT_retas.push(1-yshowMT_retas[i]);}
-                // k MT
-                kvaluesMTxAyA = [];kvaluesMTxByB = [];
-                for (i=0;i<=xshowMT_retas.length-1;i++){kvaluesMTxAyA.push(yshowMT_retas[i]/xshowMT_retas[i]);}
-                for (i=0;i<=xBshowMT_retas.length-1;i++){kvaluesMTxByB.push(yBshowMT_retas[i]/xBshowMT_retas[i]);}
-                    
-                plot(xshowMT_retas,pratosMT,'xA, McCabe-Thiele','scatter','','','','',xBshowMT_retas,pratosMT,'xB, McCabe-Thiele','scatter','','','','','','','','','','','','','','','','','profileX','Liquid phase profile','xA','Stage');
-                plot(yshowMT_retas,pratosMT,'yA, McCabe-Thiele','scatter','','','','',yBshowMT_retas,pratosMT,'yB, McCabe-Thiele','scatter','','','','','','','','','','','','','','','','','profileY','Vapor phase profile','yA','Stage');
-                plot(kvaluesMTxAyA,pratosMT,'Ka, McCabe-Thiele','scatter','','','','',kvaluesMTxByB,pratosMT,'Kb, McCabe-Thiele','scatter','','','','','','','','','','','','','','','','','profileK','K-values profile','K','Stage');
-                createtable(xshowMT_retas,yshowMT_retas,'tableMTxy','x - MT','y - MT');
-                createtable(kvaluesMTxAyA,kvaluesMTxByB,'tablekMT','Ka - MT','Kb - MT');
-
-                if (iteration.length!=0){
-                    //xy PS
-                    stagePS = iteration;
-                    pratosPS = [];
-                    for (i=1;i<=stagePS+1;i++){pratosPS.push(i);}
-                    xBshowPS_retas = [];
-                    for (i=0;i<=xshowPS_retas.length-1;i++){xBshowPS_retas.push(1-xshowPS_retas[i]);}
-                    yBshowPS_retas = [];
-                    for (i=0;i<=yshowPS_retas.length-1;i++){yBshowPS_retas.push(1-yshowPS_retas[i]);}
-                    // k PS
-                    kvaluesPSxAyA = [];kvaluesPSxByB = [];
-                    for (i=0;i<=xshowPS_retas.length-1;i++){kvaluesPSxAyA.push(yshowPS_retas[i]/xshowPS_retas[i]);}
-                    for (i=0;i<=xBshowPS_retas.length-1;i++){kvaluesPSxByB.push(yBshowPS_retas[i]/xBshowPS_retas[i]);}
-                    // T liquid phase PS
-                    var temps_t = [];var temperatura = 0;
-                    for (i=0;i<=temps_x.length-1;i++){
-                        temperatura = ((entalps_L[i]-deltaHmist+Tref*(temps_x[i]*(cpLA-cpLB)+cpLB)) / (temps_x[i]*(cpLA-cpLB)+cpLB));
-                        temps_t.push(temperatura);
-                    }
-                    plot(xshowMT_retas,pratosMT,'xA, McCabe-Thiele','scatter',xshowPS_retas,pratosPS,'xA, Ponchon-Savarit','scatter',xBshowMT_retas,pratosMT,'xB, McCabe-Thiele','scatter',xBshowPS_retas,pratosPS,'xB, Ponchon-Savarit','scatter','','','','','','','','','','','','','profileX','Liquid phase profile','xA','Stage');
-                    plot(yshowMT_retas,pratosMT,'yA, McCabe-Thiele','scatter',yshowPS_retas,pratosPS,'yA, Ponchon-Savarit','scatter',yBshowMT_retas,pratosMT,'yB, McCabe-Thiele','scatter',yBshowPS_retas,pratosPS,'yB, Ponchon-Savarit','scatter','','','','','','','','','','','','','profileY','Vapor phase profile','yA','Stage');
-                    plot(kvaluesMTxAyA,pratosMT,'Ka, McCabe-Thiele','scatter',kvaluesPSxAyA,pratosPS,'Ka, Ponchon-Savarit','scatter',kvaluesMTxByB,pratosMT,'Kb, McCabe-Thiele','scatter',kvaluesPSxByB,pratosPS,'Kb, Ponchon-Savarit','scatter','','','','','','','','','','','','','profileK','K-values profile','K','Stage');
-                    plot(temps_t,pratosPS,'Temperature data','scatter','','','','','','','','','','','','','','','','','','','','','','','','','profileT','Temperature profile','Temperature [°C]','Stage');
-                    plot(entalps_L,pratosPS,'hL, Ponchon-Savarit','scatter',entalps_V,pratosPS,'hV, Ponchon-Savarit','scatter','','','','','','','','','','','','','','','','','','','','','profileH','Enthalpy profile','H [kJ/kmol]','Stage');
-                    createtable(xshowPS_retas,yshowPS_retas,'tablePSxy','x - PS','y - PS');
-                    createtable(kvaluesPSxAyA,kvaluesPSxByB,'tablekPS','Ka - PS','Kb - PS');
-                    createtable(temps_t,pratosPS,'tablet','Temperature [°C]','Stage');
-                    createtable(entalps_L,entalps_V,'tableh','hL [kJ/kmol]','hV [kJ/kmol]');
-                    createtable(vet_xeq,vet_yeq,'tableantoineDiv','xA - Antoine','yA - Antoine');
+                    break;
                 }
             }
+            iteration = 0;
+            iteration = iteration_retif + iteration_esgot;
+            plot(vet_xentalp, vet_hL, 'Liquid enthalpy line', 'markers', vet_yentalp, vet_hV, 'Vapor enthalpy line', 'markers', vetx_alim_prod, vety_alim_prod, 'Energy balance', 'lines', uniao_xy, uniao_h, 'Ponchon-Savarit stages', 'lines', vet_eq_alimPonsavX, vet_eq_alimPonsavY, 'q-line (feed)', 'lines', '', '', '', 'lines', '', '', '', 'lines', 'plotPSDiv', 'Ponchon-Savarit method', 'xA,yA', 'H [kJ/kmol]');
 
-
-            //function to clean div that receives tables and plots
-            function hidecontent(id){document.getElementById(id).innerHTML = "";}
-
-
-            //function to clean div of profiles
-            function hideprofiles(){
-                document.getElementById('profileT').innerHTML = "";
-                document.getElementById('profileX').innerHTML = "";
-                document.getElementById('profileY').innerHTML = "";
-                document.getElementById('profileK').innerHTML = "";
-                document.getElementById('profileH').innerHTML = "";
+            var polhl = []; var polhv = 0;
+            for (var j = 0; j <= poly_HL.length; j++) {
+                if (poly_HL[j] > 0) { polhl = polhl + ' + ' + poly_HL[j] + ' * <strong>x<sup>' + (poly_HL.length - j - 1) + '</sup></strong>'; }
+                else if (poly_HL[j] < 0) { polhl = polhl + ' ' + poly_HL[j] + ' * <strong>x<sup>' + (poly_HL.length - j - 1) + '</sup></strong>'; }
             }
-
-
-            function hideprofilestables(){
-                document.getElementById('tableMTxy').innerHTML = "";
-                document.getElementById('tablePSxy').innerHTML = "";
-                document.getElementById('tablekPS').innerHTML = "";
-                document.getElementById('tablekMT').innerHTML = "";
-                document.getElementById('tablet').innerHTML = "";
-                document.getElementById('tableh').innerHTML = "";
-                document.getElementById('tableantoineDiv').innerHTML = "";
+            for (var j = 0; j <= poly_HV.length; j++) {
+                if (poly_HV[j] > 0) { polhv = polhv + ' + ' + poly_HV[j] + ' * <strong>x<sup>' + (poly_HV.length - j - 1) + '</sup></strong>'; }
+                else if (poly_HV[j] < 0) { polhv = polhv + ' ' + poly_HV[j] + ' * <strong>x<sup>' + (poly_HV.length - j - 1) + '</sup></strong>'; }
             }
+            document.getElementById('resultsPSDiv').innerHTML = '<strong>Results (Ponchon-Savarit): </strong><br><br>' + 'Liquid enthalpy curve adjusted: <br>' + polhl + '<br><br>Vapor enthalpy curve adjusted: <br>' + polhv + '<br><br>Number of stages: ' + iteration + '<br>Feed stage: ' + (iteration_retif + 1) + '<br>Rmin: ' + Rmin_ponsav + '<br>Mass balance [kmol/h]: ' + 'F = ' + Fponsav + ', B = ' + Bfundo + ', D = ' + Dtopo + '<br>Energy balance:<br>' + 'Feed = ' + hF + ' kJ/kmol , Qr (reboiler duty) = ' + Qr + ' kW , Qc (condenser duty) = ' + Qc + ' kW';
+        }
 
 
-            //function to create table for the div
-            function createtable(vet_1,vet_2,id,title1,title2){
-                hidecontent(id);
-                var id = document.getElementById(id);
-                var table = document.createElement("table");
-                var tableBody = document.createElement('tbody');
-                table.border = '1'
-                table.style.borderCollapse = 'collapse';
+        function profilesplot() {
+
+            //xy MT
+            stageMT = Math.ceil(pratos);
+            pratosMT = [];
+            for (i = 1; i <= stageMT + 1; i++) { pratosMT.push(i); }
+            xBshowMT_retas = [];
+            for (i = 0; i <= xshowMT_retas.length - 1; i++) { xBshowMT_retas.push(1 - xshowMT_retas[i]); }
+            yBshowMT_retas = [];
+            for (i = 0; i <= yshowMT_retas.length - 1; i++) { yBshowMT_retas.push(1 - yshowMT_retas[i]); }
+            // k MT
+            kvaluesMTxAyA = []; kvaluesMTxByB = [];
+            for (i = 0; i <= xshowMT_retas.length - 1; i++) { kvaluesMTxAyA.push(yshowMT_retas[i] / xshowMT_retas[i]); }
+            for (i = 0; i <= xBshowMT_retas.length - 1; i++) { kvaluesMTxByB.push(yBshowMT_retas[i] / xBshowMT_retas[i]); }
+
+            plot(xshowMT_retas, pratosMT, 'xA, McCabe-Thiele', 'scatter', '', '', '', '', xBshowMT_retas, pratosMT, 'xB, McCabe-Thiele', 'scatter', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'profileX', 'Liquid phase profile', 'xA', 'Stage');
+            plot(yshowMT_retas, pratosMT, 'yA, McCabe-Thiele', 'scatter', '', '', '', '', yBshowMT_retas, pratosMT, 'yB, McCabe-Thiele', 'scatter', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'profileY', 'Vapor phase profile', 'yA', 'Stage');
+            plot(kvaluesMTxAyA, pratosMT, 'Ka, McCabe-Thiele', 'scatter', '', '', '', '', kvaluesMTxByB, pratosMT, 'Kb, McCabe-Thiele', 'scatter', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'profileK', 'K-values profile', 'K', 'Stage');
+            createtable(xshowMT_retas, yshowMT_retas, 'tableMTxy', 'x - MT', 'y - MT');
+            createtable(kvaluesMTxAyA, kvaluesMTxByB, 'tablekMT', 'Ka - MT', 'Kb - MT');
+
+            if (iteration.length != 0) {
+                //xy PS
+                stagePS = iteration;
+                pratosPS = [];
+                for (i = 1; i <= stagePS + 1; i++) { pratosPS.push(i); }
+                xBshowPS_retas = [];
+                for (i = 0; i <= xshowPS_retas.length - 1; i++) { xBshowPS_retas.push(1 - xshowPS_retas[i]); }
+                yBshowPS_retas = [];
+                for (i = 0; i <= yshowPS_retas.length - 1; i++) { yBshowPS_retas.push(1 - yshowPS_retas[i]); }
+                // k PS
+                kvaluesPSxAyA = []; kvaluesPSxByB = [];
+                for (i = 0; i <= xshowPS_retas.length - 1; i++) { kvaluesPSxAyA.push(yshowPS_retas[i] / xshowPS_retas[i]); }
+                for (i = 0; i <= xBshowPS_retas.length - 1; i++) { kvaluesPSxByB.push(yBshowPS_retas[i] / xBshowPS_retas[i]); }
+                // T liquid phase PS
+                var temps_t = []; var temperatura = 0;
+                for (i = 0; i <= temps_x.length - 1; i++) {
+                    temperatura = ((entalps_L[i] - deltaHmist + Tref * (temps_x[i] * (cpLA - cpLB) + cpLB)) / (temps_x[i] * (cpLA - cpLB) + cpLB));
+                    temps_t.push(temperatura);
+                }
+                plot(xshowMT_retas, pratosMT, 'xA, McCabe-Thiele', 'scatter', xshowPS_retas, pratosPS, 'xA, Ponchon-Savarit', 'scatter', xBshowMT_retas, pratosMT, 'xB, McCabe-Thiele', 'scatter', xBshowPS_retas, pratosPS, 'xB, Ponchon-Savarit', 'scatter', '', '', '', '', '', '', '', '', '', '', '', '', 'profileX', 'Liquid phase profile', 'xA', 'Stage');
+                plot(yshowMT_retas, pratosMT, 'yA, McCabe-Thiele', 'scatter', yshowPS_retas, pratosPS, 'yA, Ponchon-Savarit', 'scatter', yBshowMT_retas, pratosMT, 'yB, McCabe-Thiele', 'scatter', yBshowPS_retas, pratosPS, 'yB, Ponchon-Savarit', 'scatter', '', '', '', '', '', '', '', '', '', '', '', '', 'profileY', 'Vapor phase profile', 'yA', 'Stage');
+                plot(kvaluesMTxAyA, pratosMT, 'Ka, McCabe-Thiele', 'scatter', kvaluesPSxAyA, pratosPS, 'Ka, Ponchon-Savarit', 'scatter', kvaluesMTxByB, pratosMT, 'Kb, McCabe-Thiele', 'scatter', kvaluesPSxByB, pratosPS, 'Kb, Ponchon-Savarit', 'scatter', '', '', '', '', '', '', '', '', '', '', '', '', 'profileK', 'K-values profile', 'K', 'Stage');
+                plot(temps_t, pratosPS, 'Temperature data', 'scatter', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'profileT', 'Temperature profile', 'Temperature [°C]', 'Stage');
+                plot(entalps_L, pratosPS, 'hL, Ponchon-Savarit', 'scatter', entalps_V, pratosPS, 'hV, Ponchon-Savarit', 'scatter', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'profileH', 'Enthalpy profile', 'H [kJ/kmol]', 'Stage');
+                createtable(xshowPS_retas, yshowPS_retas, 'tablePSxy', 'x - PS', 'y - PS');
+                createtable(kvaluesPSxAyA, kvaluesPSxByB, 'tablekPS', 'Ka - PS', 'Kb - PS');
+                createtable(temps_t, pratosPS, 'tablet', 'Temperature [°C]', 'Stage');
+                createtable(entalps_L, entalps_V, 'tableh', 'hL [kJ/kmol]', 'hV [kJ/kmol]');
+                createtable(vet_xeq, vet_yeq, 'tableantoineDiv', 'xA - Antoine', 'yA - Antoine');
+            }
+        }
+
+
+        //function to clean div that receives tables and plots
+        function hidecontent(id) { document.getElementById(id).innerHTML = ""; }
+
+
+        //function to clean div of profiles
+        function hideprofiles() {
+            document.getElementById('profileT').innerHTML = "";
+            document.getElementById('profileX').innerHTML = "";
+            document.getElementById('profileY').innerHTML = "";
+            document.getElementById('profileK').innerHTML = "";
+            document.getElementById('profileH').innerHTML = "";
+        }
+
+
+        function hideprofilestables() {
+            document.getElementById('tableMTxy').innerHTML = "";
+            document.getElementById('tablePSxy').innerHTML = "";
+            document.getElementById('tablekPS').innerHTML = "";
+            document.getElementById('tablekMT').innerHTML = "";
+            document.getElementById('tablet').innerHTML = "";
+            document.getElementById('tableh').innerHTML = "";
+            document.getElementById('tableantoineDiv').innerHTML = "";
+        }
+
+
+        //function to create table for the div
+        function createtable(vet_1, vet_2, id, title1, title2) {
+            hidecontent(id);
+            var id = document.getElementById(id);
+            var table = document.createElement("table");
+            var tableBody = document.createElement('tbody');
+            table.border = '1'
+            table.style.borderCollapse = 'collapse';
+            var row = document.createElement("tr");
+            tableBody.appendChild(row);
+            var head = document.createElement('th')
+            head.appendChild(document.createTextNode(title1));
+            row.appendChild(head);
+            var head = document.createElement('th')
+            head.appendChild(document.createTextNode(title2));
+            row.appendChild(head);
+            for (var r = 0; r < vet_1.length; r++) {
                 var row = document.createElement("tr");
-                tableBody.appendChild(row);
-                var head = document.createElement('th')
-                head.appendChild(document.createTextNode(title1));
-                row.appendChild(head);
-                var head = document.createElement('th')
-                head.appendChild(document.createTextNode(title2));
-                row.appendChild(head);
-                for (var r=0;r<vet_1.length;r++){
-                    var row = document.createElement("tr");
-                        for (var c=0;c<2;c++){
-                            var cell = document.createElement("td");
-                            if (c==0){cell.appendChild(document.createTextNode(vet_1[r]));}
-                            else if(c==1){cell.appendChild(document.createTextNode(vet_2[r]));}
-                            row.appendChild(cell);
-                        }tableBody.appendChild(row);}table.appendChild(tableBody);id.appendChild(table);
-            }
+                for (var c = 0; c < 2; c++) {
+                    var cell = document.createElement("td");
+                    if (c == 0) { cell.appendChild(document.createTextNode(vet_1[r])); }
+                    else if (c == 1) { cell.appendChild(document.createTextNode(vet_2[r])); }
+                    row.appendChild(cell);
+                } tableBody.appendChild(row);
+            } table.appendChild(tableBody); id.appendChild(table);
+        }
 
 
-            //create plot in the div ID, max 7 set of 2 vectors
-            function plot(vetx1,vety1,name1,mode1,vetx2,vety2,name2,mode2,vetx3,vety3,name3,mode3,vetx4,vety4,name4,mode4,vetx5,vety5,name5,mode5,vetx6,vety6,name6,mode6,vetx7,vety7,name7,mode7,id,titleplot,titlex,titley){
-                hidecontent(id);id = document.getElementById(id);
-                var layout = {autosize:false,title: titleplot, xaxis: {title: titlex}, yaxis: {title: titley}};
-                data = [{x:vetx1,y:vety1,mode: mode1,name: name1},{x:vetx2,y:vety2,mode: mode2,name: name2,marker: {color: 'rgb(255, 100, 12)'}},{x:vetx3,y:vety3,mode: mode3,name: name3},{x:vetx4,y:vety4,mode: mode4,name: name4},{x:vetx5,y:vety5,mode: mode5,name: name5},{x:vetx6,y:vety6,mode: mode6,name: name6},{x:vetx7,y:vety7,mode: mode7,name: name7,marker: {color: 'rgb(255, 100, 12)'},showlegend: false}];
-                Plotly.newPlot(id,data,layout);
-            }
+        //create plot in the div ID, max 7 set of 2 vectors
+        function plot(vetx1, vety1, name1, mode1, vetx2, vety2, name2, mode2, vetx3, vety3, name3, mode3, vetx4, vety4, name4, mode4, vetx5, vety5, name5, mode5, vetx6, vety6, name6, mode6, vetx7, vety7, name7, mode7, id, titleplot, titlex, titley) {
+            hidecontent(id); id = document.getElementById(id);
+            var layout = { autosize: false, title: titleplot, xaxis: { title: titlex }, yaxis: { title: titley } };
+            data = [{ x: vetx1, y: vety1, mode: mode1, name: name1 }, { x: vetx2, y: vety2, mode: mode2, name: name2, marker: { color: 'rgb(255, 100, 12)' } }, { x: vetx3, y: vety3, mode: mode3, name: name3 }, { x: vetx4, y: vety4, mode: mode4, name: name4 }, { x: vetx5, y: vety5, mode: mode5, name: name5 }, { x: vetx6, y: vety6, mode: mode6, name: name6 }, { x: vetx7, y: vety7, mode: mode7, name: name7, marker: { color: 'rgb(255, 100, 12)' }, showlegend: false }];
+            Plotly.newPlot(id, data, layout);
+        }
 
 
-            //function that fits a plynomial with 'order' to the 2 vectors using Gauss, return vector of coefs solution_coefs
-            function fit_gauss(data_x,data_y,order,id,solution_coefs){
-                var matrix_x = [];var matrix_y = [];var temporary = [];var soma = 0;var x = 0;var multiplicacao = 0;
-                //matrix_x with the sum of data_x to the power L+C
-                for (var L=0;L<=order;L++){
-                    var temporary = [];
-                    for (var C=0;C<=order;C++){
-                        var soma = 0;
-                        for (var i=0;i<data_x.length;i++){
-                            x = Math.pow(data_x[i], (L+C));
-                            soma = soma + x;
-                        }temporary.push(soma);}
-                matrix_x.push(temporary);}
-                //matrix_y the sum of the products of the multiplication between data_y and data_x to the power p
-                for (var p=0;p<=order;p++){
+        //function that fits a plynomial with 'order' to the 2 vectors using Gauss, return vector of coefs solution_coefs
+        function fit_gauss(data_x, data_y, order, id, solution_coefs) {
+            var matrix_x = []; var matrix_y = []; var temporary = []; var soma = 0; var x = 0; var multiplicacao = 0;
+            //matrix_x with the sum of data_x to the power L+C
+            for (var L = 0; L <= order; L++) {
+                var temporary = [];
+                for (var C = 0; C <= order; C++) {
                     var soma = 0;
-                    for (var i=0;i<data_x.length;i++){
-                        multiplicacao = (data_y[i]) * (Math.pow(data_x[i], p));
-                        soma = soma + multiplicacao;}
-                matrix_y.push([soma]);}
-                //gauss e back substitution
-                for (var i=0;i<=order;i++){matrix_x[i].push(matrix_y[i][0]);}
-                for (var i=0;i<=order;i++){
-                    for (var k=i+1;k<=order;k++){pivot = matrix_x[k][i] / matrix_x[i][i];
-                        for (var j=0;j<=order+1;j++){matrix_x[k][j] = matrix_x[k][j] - pivot * matrix_x[i][j];}
-                    }
+                    for (var i = 0; i < data_x.length; i++) {
+                        x = Math.pow(data_x[i], (L + C));
+                        soma = soma + x;
+                    } temporary.push(soma);
                 }
-                for (var i=order;i>=0;i--){
-                    matrix_y[i] = matrix_x[i][order+1];
-                    for (var j=0;j<=order;j++){
-                        if (j!=i){ matrix_y[i] = matrix_y[i] - matrix_x[i][j] * matrix_y[j];}
-                    }matrix_y[i] = matrix_y[i] / matrix_x[i][i];
-                }var solution = [];solution_coefs = [];
-                for (var j=order;j>=0;j--){
-                    solution_coefs.push(matrix_y[j]);
-                    if (id!=''){
-                        if (matrix_y[j]>0){solution = solution + ' + ' + matrix_y[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>';}
-                        else if (matrix_y[j]<0){solution = solution+ ' ' + matrix_y[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>';}
-                        document.getElementById(id).innerHTML = '<strong>Results: </strong><br><br>' + solution + '<br><br>';
-                    }
-                    
-                }return solution_coefs;
+                matrix_x.push(temporary);
             }
-
-
-            //function to evaluate f(xis) for given coeficients vet_coef
-            function put_on_poly(xis,f,vet_coef){
-                f = 0;
-                for (var i=0;i<=vet_coef.length-1;i++){
-                    f = f + (vet_coef[i] *Math.pow(xis, (vet_coef.length-i-1)));
-                }return f;
+            //matrix_y the sum of the products of the multiplication between data_y and data_x to the power p
+            for (var p = 0; p <= order; p++) {
+                var soma = 0;
+                for (var i = 0; i < data_x.length; i++) {
+                    multiplicacao = (data_y[i]) * (Math.pow(data_x[i], p));
+                    soma = soma + multiplicacao;
+                }
+                matrix_y.push([soma]);
             }
-
-
-            //function to find root using Bissection method
-            function root_bissection(vet_coef,order,a,b,tol,c){
-                var fa = 0;var fb = 0;var fc = 0;var f = 0;
-                var fa = put_on_poly(a,fa,vet_coef);
-                var fb = put_on_poly(b,fb,vet_coef);
-                var k = 0;
-                    while (b-a>tol){var fa = 0;var fb = 0;var fc = 0;c = 0;k=k+1;
-                        c = (a+b)/2;
-                        var fc = put_on_poly(c,fc,vet_coef);
-                        var fa = put_on_poly(a,fa,vet_coef);
-                        var fb = put_on_poly(b,fb,vet_coef);
-                        if (fa * fc < 0){b = c;}
-                        else if (fa * fc > 0) {a = c;}
-                }return c;
+            //gauss e back substitution
+            for (var i = 0; i <= order; i++) { matrix_x[i].push(matrix_y[i][0]); }
+            for (var i = 0; i <= order; i++) {
+                for (var k = i + 1; k <= order; k++) {
+                    pivot = matrix_x[k][i] / matrix_x[i][i];
+                    for (var j = 0; j <= order + 1; j++) { matrix_x[k][j] = matrix_x[k][j] - pivot * matrix_x[i][j]; }
+                }
             }
+            for (var i = order; i >= 0; i--) {
+                matrix_y[i] = matrix_x[i][order + 1];
+                for (var j = 0; j <= order; j++) {
+                    if (j != i) { matrix_y[i] = matrix_y[i] - matrix_x[i][j] * matrix_y[j]; }
+                } matrix_y[i] = matrix_y[i] / matrix_x[i][i];
+            } var solution = []; solution_coefs = [];
+            for (var j = order; j >= 0; j--) {
+                solution_coefs.push(matrix_y[j]);
+                if (id != '') {
+                    if (matrix_y[j] > 0) { solution = solution + ' + ' + matrix_y[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>'; }
+                    else if (matrix_y[j] < 0) { solution = solution + ' ' + matrix_y[j] + ' * <strong>x<sup>' + (j) + '</sup></strong>'; }
+                    document.getElementById(id).innerHTML = '<strong>Results: </strong><br><br>' + solution + '<br><br>';
+                }
 
-        </script>
+            } return solution_coefs;
+        }
 
-    </body>
+
+        //function to evaluate f(xis) for given coeficients vet_coef
+        function put_on_poly(xis, f, vet_coef) {
+            f = 0;
+            for (var i = 0; i <= vet_coef.length - 1; i++) {
+                f = f + (vet_coef[i] * Math.pow(xis, (vet_coef.length - i - 1)));
+            } return f;
+        }
+
+
+        //function to find root using Bissection method
+        function root_bissection(vet_coef, order, a, b, tol, c) {
+            var fa = 0; var fb = 0; var fc = 0; var f = 0;
+            var fa = put_on_poly(a, fa, vet_coef);
+            var fb = put_on_poly(b, fb, vet_coef);
+            var k = 0;
+            while (b - a > tol) {
+                var fa = 0; var fb = 0; var fc = 0; c = 0; k = k + 1;
+                c = (a + b) / 2;
+                var fc = put_on_poly(c, fc, vet_coef);
+                var fa = put_on_poly(a, fa, vet_coef);
+                var fb = put_on_poly(b, fb, vet_coef);
+                if (fa * fc < 0) { b = c; }
+                else if (fa * fc > 0) { a = c; }
+            } return c;
+        }
+
+    </script>
+
+</body>
+
 </html>
